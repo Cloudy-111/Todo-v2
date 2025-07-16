@@ -1,5 +1,6 @@
 package com.example.todo_listv2.activities;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
@@ -7,20 +8,48 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.todo_listv2.R;
+import com.example.todo_listv2.databinding.ActivityMainBinding;
+import com.example.todo_listv2.fragments.HomeFragment;
+import com.example.todo_listv2.fragments.ProfileFragment;
 
 public class MainActivity extends AppCompatActivity {
-
+    private ActivityMainBinding binding;
+    private SharedPreferences preferences;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_main);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        preferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+        int userId = preferences.getInt("user_id", 0);
+
+        HomeFragment homeFragment = new HomeFragment();
+        ProfileFragment profileFragment = new ProfileFragment();
+
+        replaceFragment(homeFragment);
+        binding.bottomNavigationView.setBackground(null);
+
+        binding.bottomNavigationView.setOnItemSelectedListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.homeBtn) {
+                replaceFragment(new HomeFragment());
+            } else if (id == R.id.profileBtn) {
+                replaceFragment(new ProfileFragment());
+            }
+            return true;
         });
+    }
+
+    private void replaceFragment(Fragment fragment){
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.replace(R.id.frameLayout, fragment);
+        ft.commit();
     }
 }

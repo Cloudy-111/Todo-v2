@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="BottomNavTextActive" parent="TextAppearance.Material3.BodySmall">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/bottom_nav_selector</item>
+        <item name="fontFamily">@font/sf_compact_rounded_bold</item>
+    </style>
+    <style name="BottomNavTextInactive" parent="TextAppearance.Material3.BodySmall">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/bottom_nav_selector</item>
+        <item name="fontFamily">@font/sf_compact_rounded</item>
+    </style>
+</resources>

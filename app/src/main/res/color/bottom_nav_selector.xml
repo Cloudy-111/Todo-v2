@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Được chọn -->
+    <item android:color="@color/secondary" android:state_checked="true" />
+
+    <!-- Được bật (enabled), không chọn, không nhấn -->
+    <item android:color="@color/gray" android:state_enabled="true" />
+
+    <!-- Mặc định (không chọn, không nhấn, không enabled) -->
+    <item android:color="@color/gray_light" />
+</selector>
