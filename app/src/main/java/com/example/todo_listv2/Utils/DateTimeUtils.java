@@ -22,6 +22,11 @@ public class DateTimeUtils {
         return new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
     }
 
+    public static String formatTime(long millis) {
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm a", Locale.getDefault());
+        return sdf.format(new Date(millis));
+    }
+
     public static List<WeekDay> getCurrentWeekDays() {
         List<WeekDay> days = new ArrayList<>();
 
