@@ -10,4 +10,7 @@
         <item name="android:textColor">@color/bottom_nav_selector</item>
         <item name="fontFamily">@font/sf_compact_rounded</item>
     </style>
+    <style name="SFCompactRoundedStyle" parent="android:Widget.TextView">
+        <item name="fontFamily">@font/sf_compact_rounded</item>
+    </style>
 </resources>

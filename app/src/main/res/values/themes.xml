@@ -8,6 +8,6 @@
     <style name="Theme.Todo_listV2" parent="Base.Theme.Todo_listV2" >
         <item name="android:statusBarColor">@color/white</item>
         <item name="android:windowLightStatusBar">true</item>
+        <item name="fontFamily">@font/sf_compact_rounded</item>
     </style>
-
 </resources>
