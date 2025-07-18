@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         preferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
-        int userId = preferences.getInt("user_id", 0);
+        String userId = preferences.getString("user_id", "0");
 
         HomeFragment homeFragment = new HomeFragment();
         ProfileFragment profileFragment = new ProfileFragment();

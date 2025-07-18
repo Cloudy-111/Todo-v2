@@ -1,5 +1,7 @@
 package com.example.todo_listv2.models;
 
+import java.util.UUID;
+
 public class Priority {
     private String id;
     private String name;
@@ -7,6 +9,7 @@ public class Priority {
     private int level;
 
     public Priority(String name, String colorHex, int level) {
+        this.id = UUID.randomUUID().toString();
         this.name = name;
         this.colorHex = colorHex;
         this.level = level;

@@ -31,7 +31,7 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         preferences = getActivity().getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
-        int userId = preferences.getInt("user_id", 0);
+        String userId = preferences.getString("user_id", "0");
         return binding.getRoot();
     }
 

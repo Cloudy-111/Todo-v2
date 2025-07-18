@@ -1,5 +1,7 @@
 package com.example.todo_listv2.models;
 
+import java.util.UUID;
+
 public class Tag {
     private String id;
     private String color;
@@ -7,6 +9,7 @@ public class Tag {
     private String userId;
 
     public Tag(String userId, String color, String name) {
+        this.id = UUID.randomUUID().toString();
         this.userId = userId;
         this.color = color;
         this.name = name;
