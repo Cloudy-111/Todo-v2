@@ -1,5 +1,6 @@
 package com.example.todo_listv2.adapters;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.todo_listv2.R;
+import com.example.todo_listv2.models.Priority;
 import com.example.todo_listv2.models.PriorityHeaderItem;
 import com.example.todo_listv2.models.Tag;
 import com.example.todo_listv2.models.Task;
@@ -16,6 +18,7 @@ import com.example.todo_listv2.viewHolders.HeaderViewHolder;
 import com.example.todo_listv2.viewHolders.TaskProgressViewHolder;
 import com.example.todo_listv2.viewHolders.TaskViewHolder;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,8 +30,15 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private List<ListItemTask> listItemTasks;
     private Map<String, Tag> mapTag;
 
-    public TaskAdapter(List<ListItemTask> listItemTasks){
+    public TaskAdapter(List<ListItemTask> listItemTasks, List<Tag> listTag){
         this.listItemTasks = listItemTasks;
+
+        mapTag = new HashMap<>();
+        if (listTag != null) {
+            for (Tag tag : listTag) {
+                mapTag.put(tag.getId(), tag);
+            }
+        }
     }
 
     @Override
@@ -49,10 +59,13 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position){
         ListItemTask item = listItemTasks.get(position);
 
+        Log.d("itemListSize", "Size: " + listItemTasks.size());
         if(item.getItemType() == HEADER_TYPE){
             ((HeaderViewHolder) holder).bind((PriorityHeaderItem) item);
+            Log.d("Bind", "Binding item at pos " + position + ": type=" + item.getItemType());
         } else if(item.getItemType() == TASK_TYPE){
             ((TaskViewHolder) holder).bind((TaskItemWrapper) item, mapTag);
+            Log.d("Bind", "Binding item at pos " + position + ": title=" + ((TaskItemWrapper) item).getTask().getTitle());
         } else {
             ((TaskProgressViewHolder) holder).bind((TaskItemWrapper) item, mapTag);
         }
@@ -68,11 +81,13 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return listItemTasks.size();
     }
 
-    public void setTags(List<Tag> tags){
-        mapTag = new HashMap<>();
-        for (Tag tag : tags) {
-            mapTag.put(tag.getId(), tag);
-        }
+    public void setTags(Map<String, Tag> tagMap){
+        this.mapTag = tagMap != null ? tagMap : new HashMap<>();
+        notifyDataSetChanged();
+    }
+
+    public void setTasks(List<ListItemTask> tasks){
+        this.listItemTasks = tasks != null ? tasks : new ArrayList<>();
         notifyDataSetChanged();
     }
 }

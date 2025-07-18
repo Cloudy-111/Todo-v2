@@ -19,8 +19,9 @@ public class Task {
     private String tagId;
     private boolean isProgressTask;
     private double successRate;
+    private String userId;
 
-    public Task(String title, String description, String note, long startTime, long endTime, long remindAt, String priorityId, String tagId, boolean isProgressTask, double successRate) {
+    public Task(String title, String description, String note, long startTime, long endTime, long remindAt, String priorityId, String tagId, boolean isProgressTask, double successRate, String userId) {
         this.id = UUID.randomUUID().toString();
         this.note = note;
         this.title = title;
@@ -35,6 +36,11 @@ public class Task {
         this.tagId = tagId;
         this.isProgressTask = isProgressTask;
         this.successRate = successRate;
+        this.userId = userId;
+    }
+
+    public String getUserId() {
+        return userId;
     }
 
     public double getSuccessRate() {

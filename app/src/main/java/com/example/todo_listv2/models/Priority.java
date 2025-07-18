@@ -12,6 +12,18 @@ public class Priority {
         this.level = level;
     }
 
+    // Test DB
+    public Priority(String id, String name, String colorHex, int level) {
+        this.id = id;
+        this.name = name;
+        this.colorHex = colorHex;
+        this.level = level;
+    }
+
+    public String getId() {
+        return id;
+    }
+
     public String getName() {
         return name;
     }

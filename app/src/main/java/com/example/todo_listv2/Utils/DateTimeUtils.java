@@ -27,6 +27,28 @@ public class DateTimeUtils {
         return sdf.format(new Date(millis));
     }
 
+    public static long convertDateStringToMillis(String dateString){
+        try{
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+            Date date = sdf.parse(dateString);
+            return date.getTime();
+        } catch (ParseException e){
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
+    public static long convertTimeStringToMillis(String timeString){
+        try{
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
+            Date date = sdf.parse(timeString);
+            return date.getTime();
+        } catch (ParseException e){
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
     public static List<WeekDay> getCurrentWeekDays() {
         List<WeekDay> days = new ArrayList<>();
 

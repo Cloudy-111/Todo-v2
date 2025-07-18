@@ -12,4 +12,11 @@ public class ChangeColorUtils {
             ((GradientDrawable) background).setColor(Color.GRAY);
         }
     }
+
+    public static void fallbackError(View view) {
+        Drawable background = view.getBackground();
+        if (background instanceof GradientDrawable) {
+            ((GradientDrawable) background).setColor(Color.RED);
+        }
+    }
 }
