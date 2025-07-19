@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:scaleX="1.2"
             android:scaleY="1.2"
-            android:layout_weight="0.1"/>
+            android:layout_weight="0.2"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -40,9 +40,6 @@
                 android:textColor="@color/black"
                 android:textSize="15sp"
                 android:text="ANY TASK"
-                android:layout_marginHorizontal="10dp"
-                android:maxLength="20"
-                android:ellipsize="end"
                 android:maxLines="1"
                 android:layout_weight="1"/>
 
@@ -50,12 +47,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:layout_weight="1">
                 <TextView
                     android:id="@+id/time_task_progress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="10dp"
                     android:ellipsize="end"
                     android:maxLength="20"
                     android:maxLines="1"

@@ -33,8 +33,14 @@ public class TaskViewHolder extends RecyclerView.ViewHolder {
 
     public void bind(TaskItemWrapper item, Map<String, Tag> mapTag){
         Task task = item.getTask();
+        int maxLengthText = 30;
         checkBox.setChecked(task.isCompleted());
-        nameTask.setText(task.getTitle());
+
+        String titleText = task.getTitle();
+        if(titleText.length() > maxLengthText){
+            titleText = titleText.substring(0, maxLengthText - 3) + "...";
+        }
+        nameTask.setText(titleText);
         timeRemind.setText(DateTimeUtils.formatTime(task.getRemindAt()));
 
         Tag tag = mapTag.get(task.getTagId());

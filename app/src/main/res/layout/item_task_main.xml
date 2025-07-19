@@ -40,9 +40,6 @@
                 android:textColor="@color/black"
                 android:textSize="15sp"
                 android:text="ANY TASK"
-                android:layout_marginHorizontal="10dp"
-                android:maxLength="20"
-                android:ellipsize="end"
                 android:maxLines="1"
                 android:layout_weight="1"/>
 
@@ -50,7 +47,6 @@
                 android:id="@+id/time_task"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="10dp"
                 android:ellipsize="end"
                 android:maxLength="20"
                 android:maxLines="1"

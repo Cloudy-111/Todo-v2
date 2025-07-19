@@ -4,7 +4,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
-    android:paddingRight="8dp">
+    android:paddingHorizontal="8dp">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -18,7 +18,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="5dp"
+            android:paddingHorizontal="5dp"
             android:text="Progress: "
             android:textColor="@color/black"
             android:textSize="10sp"
@@ -33,7 +33,7 @@
                 android:id="@+id/progress_bar"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:background="@color/primary" />
+                android:background="@drawable/progress_current" />
         </FrameLayout>
     </LinearLayout>
 

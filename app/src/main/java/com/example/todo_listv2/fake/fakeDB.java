@@ -42,7 +42,7 @@ public class fakeDB {
         list.add(new Task("Completed Routine 7", "Time is Money!", "THIS IS NOTE!", DateTimeUtils.convertDateStringToMillis(startTime), DateTimeUtils.convertDateStringToMillis(endTime), DateTimeUtils.convertTimeStringToMillis(remindAt), "1", "2", false, 0, "1"));
         list.add(new Task("Completed Routine 8", "Time is Money!", "THIS IS NOTE!", DateTimeUtils.convertDateStringToMillis(startTime), DateTimeUtils.convertDateStringToMillis(endTime), DateTimeUtils.convertTimeStringToMillis(remindAt), "1", "2", false, 0, "1"));
         list.add(new Task("Completed Routine 9", "Time is Money!", "THIS IS NOTE!", DateTimeUtils.convertDateStringToMillis(startTime), DateTimeUtils.convertDateStringToMillis(endTime), DateTimeUtils.convertTimeStringToMillis(remindAt), "1", "2", false, 0, "1"));
-        list.add(new Task("Completed Routine 10", "Time is Money!", "THIS IS NOTE!", DateTimeUtils.convertDateStringToMillis(startTime), DateTimeUtils.convertDateStringToMillis(endTime), DateTimeUtils.convertTimeStringToMillis(remindAt), "1", "2", false, 0, "1"));
+        list.add(new Task("Completed Progress 10asdasdsasasdd", "Time is Money!", "THIS IS NOTE!", DateTimeUtils.convertDateStringToMillis(startTime), DateTimeUtils.convertDateStringToMillis(endTime), DateTimeUtils.convertTimeStringToMillis(remindAt), "1", "2", true, 1, "1"));
         return list;
     }
 }
