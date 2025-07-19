@@ -9,7 +9,7 @@
     <color name="inactive_icon">#B0B0B0</color>
     <color name="teal_200">#03DAC5</color>
     <color name="gray">#555555</color>
-    <color name="gray_light">#EFEFEF</color>
+    <color name="gray_light">#D3D3D3</color>
 
     <color name="background_light">#F5F5F5</color>
     <color name="primary_color">#3F51B5</color>
@@ -18,4 +18,6 @@
     <color name="high_priority">#FF4444</color>
     <color name="medium_priority">#FB53F2</color>
     <color name="low_priority">#9511DD</color>
+
+    <color name="background_secondary">#FFF4E5</color>
 </resources>

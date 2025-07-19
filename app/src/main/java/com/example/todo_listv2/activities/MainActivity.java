@@ -1,7 +1,9 @@
 package com.example.todo_listv2.activities;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -43,6 +45,15 @@ public class MainActivity extends AppCompatActivity {
                 replaceFragment(new ProfileFragment());
             }
             return true;
+        });
+
+        binding.addTaskButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, AddTaskActivity.class));
+                overridePendingTransition(R.anim.slide_in_bottom, R.anim.no_animation);
+                finish();
+            }
         });
     }
 
