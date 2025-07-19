@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.todo_listv2.R;
 import com.example.todo_listv2.Utils.ChangeColorUtils;
 import com.example.todo_listv2.Utils.DateTimeUtils;
+import com.example.todo_listv2.Utils.TextUtils;
 import com.example.todo_listv2.models.Tag;
 import com.example.todo_listv2.models.Task;
 import com.example.todo_listv2.models.TaskItemWrapper;
@@ -21,6 +22,7 @@ import com.google.android.material.checkbox.MaterialCheckBox;
 import java.util.Map;
 
 public class TaskProgressViewHolder extends RecyclerView.ViewHolder {
+    private static final int MAX_LENGTH_TITLE = 30;
     public MaterialCheckBox checkBox;
     public TextView nameTask, timeRemind;
     public View colorBar;
@@ -39,14 +41,8 @@ public class TaskProgressViewHolder extends RecyclerView.ViewHolder {
 
     public void bind(TaskItemWrapper item, Map<String, Tag> mapTag){
         Task task = item.getTask();
-        int maxLengthText = 30;
         checkBox.setChecked(task.isCompleted());
-
-        String titleText = task.getTitle();
-        if(titleText.length() > maxLengthText){
-            titleText = titleText.substring(0, maxLengthText - 3) + "...";
-        }
-        nameTask.setText(titleText);
+        nameTask.setText(TextUtils.ellipsize(task.getTitle(), MAX_LENGTH_TITLE));
         timeRemind.setText(DateTimeUtils.formatTime(task.getRemindAt()));
 
         Tag tag = mapTag.get(task.getTagId());

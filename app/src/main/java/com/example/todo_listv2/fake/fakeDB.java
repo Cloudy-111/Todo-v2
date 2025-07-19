@@ -33,16 +33,23 @@ public class fakeDB {
         String startTime = "2025-07-10";
         String endTime = "2025-07-15";
         String remindAt = "09:00";
-        list.add(new Task("Completed Routine 1", "Time is Money!", "THIS IS NOTE!", DateTimeUtils.convertDateStringToMillis(startTime), DateTimeUtils.convertDateStringToMillis(endTime), DateTimeUtils.convertTimeStringToMillis(remindAt), "1", "2", false, 0, "1"));
-        list.add(new Task("Completed Routine 2", "Time is Money!", "THIS IS NOTE!", DateTimeUtils.convertDateStringToMillis(startTime), DateTimeUtils.convertDateStringToMillis(endTime), DateTimeUtils.convertTimeStringToMillis(remindAt), "1", "2", false, 0, "1"));
-        list.add(new Task("Completed Routine 3", "Time is Money!", "THIS IS NOTE!", DateTimeUtils.convertDateStringToMillis(startTime), DateTimeUtils.convertDateStringToMillis(endTime), DateTimeUtils.convertTimeStringToMillis(remindAt), "1", "2", false, 0, "1"));
-        list.add(new Task("Completed Routine 4", "Time is Money!", "THIS IS NOTE!", DateTimeUtils.convertDateStringToMillis(startTime), DateTimeUtils.convertDateStringToMillis(endTime), DateTimeUtils.convertTimeStringToMillis(remindAt), "1", "2", false, 0, "1"));
-        list.add(new Task("Completed Routine 5", "Time is Money!", "THIS IS NOTE!", DateTimeUtils.convertDateStringToMillis(startTime), DateTimeUtils.convertDateStringToMillis(endTime), DateTimeUtils.convertTimeStringToMillis(remindAt), "1", "2", false, 0, "1"));
-        list.add(new Task("Completed Routine 6", "Time is Money!", "THIS IS NOTE!", DateTimeUtils.convertDateStringToMillis(startTime), DateTimeUtils.convertDateStringToMillis(endTime), DateTimeUtils.convertTimeStringToMillis(remindAt), "1", "2", false, 0, "1"));
-        list.add(new Task("Completed Routine 7", "Time is Money!", "THIS IS NOTE!", DateTimeUtils.convertDateStringToMillis(startTime), DateTimeUtils.convertDateStringToMillis(endTime), DateTimeUtils.convertTimeStringToMillis(remindAt), "1", "2", false, 0, "1"));
-        list.add(new Task("Completed Routine 8", "Time is Money!", "THIS IS NOTE!", DateTimeUtils.convertDateStringToMillis(startTime), DateTimeUtils.convertDateStringToMillis(endTime), DateTimeUtils.convertTimeStringToMillis(remindAt), "1", "2", false, 0, "1"));
-        list.add(new Task("Completed Routine 9", "Time is Money!", "THIS IS NOTE!", DateTimeUtils.convertDateStringToMillis(startTime), DateTimeUtils.convertDateStringToMillis(endTime), DateTimeUtils.convertTimeStringToMillis(remindAt), "1", "2", false, 0, "1"));
-        list.add(new Task("Completed Progress 10asdasdsasasdd", "Time is Money!", "THIS IS NOTE!", DateTimeUtils.convertDateStringToMillis(startTime), DateTimeUtils.convertDateStringToMillis(endTime), DateTimeUtils.convertTimeStringToMillis(remindAt), "1", "2", true, 1, "1"));
+        list.add(new Task("Completed Routine 1", "Time is Money!", "THIS IS NOTE!", DateTimeUtils.convertDateStringToMillis(startTime), DateTimeUtils.convertDateStringToMillis(endTime), DateTimeUtils.convertTimeStringToMillis(remindAt), "1", "1", false, 0, userId));
+        list.add(new Task("Completed Routine 2", "Time is Money!", "THIS IS NOTE!", DateTimeUtils.convertDateStringToMillis(startTime), DateTimeUtils.convertDateStringToMillis(endTime), DateTimeUtils.convertTimeStringToMillis(remindAt), "2", "2", false, 0, userId));
+        list.add(new Task("Completed Routine 3", "Time is Money!", "THIS IS NOTE!", DateTimeUtils.convertDateStringToMillis(startTime), DateTimeUtils.convertDateStringToMillis(endTime), DateTimeUtils.convertTimeStringToMillis(remindAt), "1", "2", false, 0, userId));
+        list.add(new Task("Completed Routine 4", "Time is Money!", "THIS IS NOTE!", DateTimeUtils.convertDateStringToMillis(startTime), DateTimeUtils.convertDateStringToMillis(endTime), DateTimeUtils.convertTimeStringToMillis(remindAt), "1", "1", false, 0, userId));
+        list.add(new Task("Completed Routine 5", "Time is Money!", "THIS IS NOTE!", DateTimeUtils.convertDateStringToMillis(startTime), DateTimeUtils.convertDateStringToMillis(endTime), DateTimeUtils.convertTimeStringToMillis(remindAt), "2", "2", false, 0, userId));
+        list.add(new Task("Completed Routine 6", "Time is Money!", "THIS IS NOTE!", DateTimeUtils.convertDateStringToMillis(startTime), DateTimeUtils.convertDateStringToMillis(endTime), DateTimeUtils.convertTimeStringToMillis(remindAt), "1", "1", false, 0, userId));
+        list.add(new Task("Completed Routine 7", "Time is Money!", "THIS IS NOTE!", DateTimeUtils.convertDateStringToMillis(startTime), DateTimeUtils.convertDateStringToMillis(endTime), DateTimeUtils.convertTimeStringToMillis(remindAt), "2", "2", false, 0, userId));
+        list.add(new Task("Completed Routine 8", "Time is Money!", "THIS IS NOTE!", DateTimeUtils.convertDateStringToMillis(startTime), DateTimeUtils.convertDateStringToMillis(endTime), DateTimeUtils.convertTimeStringToMillis(remindAt), "2", "1", false, 0, userId));
+        list.add(new Task("Completed Routine 9", "Time is Money!", "THIS IS NOTE!", DateTimeUtils.convertDateStringToMillis(startTime), DateTimeUtils.convertDateStringToMillis(endTime), DateTimeUtils.convertTimeStringToMillis(remindAt), "1", "2", false, 0, userId));
+        list.add(new Task("Completed Progress 10asdasdsasasdd", "Time is Money!", "THIS IS NOTE!", DateTimeUtils.convertDateStringToMillis(startTime), DateTimeUtils.convertDateStringToMillis(endTime), DateTimeUtils.convertTimeStringToMillis(remindAt), "1", "2", true, 1, userId));
         return list;
+    }
+
+    public static Task getTaskById(String taskId){
+        String startTime = "2025-07-10";
+        String endTime = "2025-07-15";
+        String remindAt = "09:00";
+        return new Task("Completed Routine 1", "Time is Money!", "THIS IS NOTE!", DateTimeUtils.convertDateStringToMillis(startTime), DateTimeUtils.convertDateStringToMillis(endTime), DateTimeUtils.convertTimeStringToMillis(remindAt), "1", "2", false, 0, "1");
     }
 }

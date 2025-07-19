@@ -66,7 +66,7 @@ public class TodayFragment extends Fragment implements WeekDayAdapter.OnItemList
         observerData();
         setRecyclerTaskView();
 
-        taskDayViewModel.loadData("2025-07-13", "1");
+        taskDayViewModel.loadData("2025-07-13", user_id);
     }
 
     private void initCalendar(){
