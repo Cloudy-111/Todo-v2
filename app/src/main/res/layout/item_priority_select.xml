@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingVertical="5dp">
+
+    <View
+        android:id="@+id/priority_color_view"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginHorizontal="10dp"
+        android:background="@drawable/background_item_tag" />
+
+    <TextView
+        android:gravity="end"
+        android:id="@+id/priority_name_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Priority"
+        android:layout_marginHorizontal="10dp"
+        app:fontFamily="@font/sf_compact_rounded_bold"
+        android:textSize="16sp"
+        android:textColor="@color/black"
+        android:layout_weight="1"/>
+</LinearLayout>

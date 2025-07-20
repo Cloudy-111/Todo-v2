@@ -23,8 +23,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.todo_listv2.R;
 import com.example.todo_listv2.Utils.DateTimeUtils;
+import com.example.todo_listv2.adapters.PriorityAdapter;
 import com.example.todo_listv2.adapters.TagAdapter;
 import com.example.todo_listv2.databinding.ActivityAddTaskBinding;
+import com.example.todo_listv2.models.Priority;
 import com.example.todo_listv2.models.Tag;
 import com.example.todo_listv2.models.Task;
 import com.example.todo_listv2.repositories.TagRepository;
@@ -41,13 +43,16 @@ public class AddTaskActivity extends AppCompatActivity {
     private SharedPreferences preferences;
     private AddTaskViewModel addTaskViewModel;
     private TagAdapter tagAdapter;
+    private PriorityAdapter priorityAdapter;
 
-    private TextView startDateTextView, endDateTextView, remindHourTextView, tagNameDisplay;
+    private TextView startDateTextView, endDateTextView, remindHourTextView, tagNameDisplay, priorityName;
     private EditText editNoteText, editTitleText, editTagName;
     private Button saveButton, chooseColor, btnCancel, btnConfirm;
-    private View selectColorPreview, selectedColor;
+    private View selectColorPreview, selectedColor, priorityView;
     private Tag selectedTag;
+    private Priority selectedPriority;
     private List<Tag> tagList;
+    private List<Priority> priorities;
     private Calendar startDateCalendar, endDateCalendar;
     private String userId;
     private int selectedColorValue = Color.parseColor("#FF7676");
@@ -62,6 +67,8 @@ public class AddTaskActivity extends AppCompatActivity {
         userId = preferences.getString("user_id", "0");
 
         tagList = new ArrayList<>();
+        priorities = new ArrayList<>();
+
         startDateTextView = binding.startDateTextView;
         endDateTextView = binding.endDateTextView;
         editNoteText = binding.editNoteText;
@@ -75,6 +82,9 @@ public class AddTaskActivity extends AppCompatActivity {
         tagNameDisplay = binding.tagName;
         selectedColor = binding.tagView;
 
+        priorityName = binding.priorityName;
+        priorityView = binding.priorityView;
+
         startDateTextView.setOnClickListener(v -> DateTimeUtils.showDatePicker(startDateTextView));
         endDateTextView.setOnClickListener(v -> DateTimeUtils.showDatePicker(endDateTextView));
 
@@ -85,6 +95,11 @@ public class AddTaskActivity extends AppCompatActivity {
         }
         if (tagContainer != null) {
             tagContainer.setOnClickListener(v -> showTagSelectorDialog());
+        }
+
+        View priorityView = binding.prioritySelect;
+        if(priorityView != null){
+            priorityView.setOnClickListener(v -> showPrioritySelectorDialog());
         }
 
         remindHourTextView.setOnClickListener(new View.OnClickListener() {
@@ -116,6 +131,40 @@ public class AddTaskActivity extends AppCompatActivity {
             this.tagList = tagList;
             tagAdapter.updateData(tagList);
         });
+        addTaskViewModel.priorityList.observe(this, priorities -> {
+            this.priorities = priorities;
+            priorityAdapter.updateData(priorities);
+        });
+    }
+
+    private void showPrioritySelectorDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        View dialogView= LayoutInflater.from(this).inflate(R.layout.dialog_priority_selector, null);
+        builder.setView(dialogView);
+
+        AlertDialog dialog = builder.create();
+
+        RecyclerView recyclerView = dialogView.findViewById(R.id.recycler_priority_list);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        priorityAdapter = new PriorityAdapter(priorities, priority-> {
+            selectedPriority = priority;
+
+            priorityName.setText(selectedPriority.getName());
+            try{
+                int color = Color.parseColor(priority.getColorHex());
+                priorityView.setBackgroundTintList(ColorStateList.valueOf(color));
+            } catch (Exception e){
+                priorityView.setBackgroundTintList(ColorStateList.valueOf(Color.GRAY));
+            }
+            dialog.dismiss();
+            Toast.makeText(this, priority.getName(), Toast.LENGTH_SHORT).show();
+        });
+
+        recyclerView.setAdapter(priorityAdapter);
+        addTaskViewModel.loadAllPriorities();
+
+        dialog.show();
     }
 
     private void showTagSelectorDialog(){
