@@ -58,6 +58,7 @@
             android:layout_weight="1">
 
             <EditText
+                android:id="@+id/edit_title_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Enter your task..."
@@ -66,7 +67,6 @@
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:padding="8dp"
-                android:elevation="8dp"
                 android:background="@drawable/background_edit"/>
 
             <include layout="@layout/divider_slash"/>
@@ -85,7 +85,7 @@
                     android:textStyle="bold" />
 
                 <EditText
-                    android:id="@+id/note_task"
+                    android:id="@+id/edit_note_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="8dp"

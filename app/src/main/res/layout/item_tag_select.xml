@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="3dp"
+    android:gravity="center_vertical">
+
+    <View
+        android:id="@+id/tag_color_preview"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@drawable/background_item_tag" />
+
+    <TextView
+        android:id="@+id/tag_name_select"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tên tag"
+        android:layout_marginLeft="10dp"
+        android:textSize="16sp"
+        android:textColor="@color/black" />
+</LinearLayout>

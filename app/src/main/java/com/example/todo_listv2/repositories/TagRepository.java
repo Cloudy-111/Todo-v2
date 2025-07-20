@@ -1,5 +1,9 @@
 package com.example.todo_listv2.repositories;
 
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+
 import com.example.todo_listv2.fake.fakeDB;
 import com.example.todo_listv2.models.Tag;
 
@@ -11,6 +15,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
 
+import okhttp3.Call;
+import okhttp3.Callback;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -22,7 +28,7 @@ public class TagRepository {
     private final String baseURL = "http://192.168.10.104:5000";
 
     public interface TagCallback{
-        void onSuccess(Tag newTag);
+        void onSuccess(String message, Tag tag);
         void onError(String errorMessage);
     }
     public List<Tag> getAllTagByUserId(String userId){
@@ -55,6 +61,71 @@ public class TagRepository {
         }
         return result;
     }
+
+    public void saveNewTag(Tag newTag, TagCallback callback){
+
+        JSONObject json = new JSONObject();
+        try {
+            json.put("id", newTag.getId());
+            json.put("name", newTag.getName());
+            json.put("color", newTag.getColor());
+            json.put("userId", newTag.getUserId());
+        } catch (Exception e){
+            e.printStackTrace();
+            callback.onError("Error Create JSON");
+            return;
+        }
+
+        RequestBody body = RequestBody.create(json.toString(), MediaType.parse("application/json"));
+        Request request = new Request.Builder()
+                .url(baseURL + "/tag/create")
+                .post(body)
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                callback.onError("Can't connect to server");
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (response.isSuccessful() && response.body() != null) {
+                    try {
+                        // Đọc nội dung JSON string
+                        String resStr = response.body().string();
+                        Log.d("HTTP_RESPONSE", "Raw response: " + resStr);
+
+                        // Parse JSON
+                        JSONObject resJSON = new JSONObject(resStr);
+                        Log.d("JSON", resJSON.toString());
+
+                        // Xử lý dữ liệu
+                        boolean success = resJSON.getBoolean("success");
+                        if (success){
+                            JSONObject data = resJSON.getJSONObject("data");
+                            String id = data.getString("id");
+                            String name = data.getString("name");
+                            String color = data.getString("color");
+                            String userId = data.getString("userId");
+
+                            Tag newTag = new Tag(id, userId, color, name);
+                            String message = resJSON.getString("message");
+                            callback.onSuccess(message + " " + id, newTag);
+                        } else {
+                            callback.onError(resJSON.getString("message"));
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        callback.onError("Error Response: " + e.getMessage());
+                    }
+                } else {
+                    callback.onError("Error Server: " + response.code());
+                }
+            }
+        });
+    }
+
+
 //    public Tag getTagByTaskId(String taskId){
 //
 //    }
