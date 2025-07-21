@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,10 +31,12 @@ import com.example.todo_listv2.models.Priority;
 import com.example.todo_listv2.models.Tag;
 import com.example.todo_listv2.models.Task;
 import com.example.todo_listv2.repositories.TagRepository;
+import com.example.todo_listv2.repositories.TaskRepository;
 import com.example.todo_listv2.viewModels.AddTaskViewModel;
 import com.flask.colorpicker.ColorPickerView;
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -48,12 +51,12 @@ public class AddTaskActivity extends AppCompatActivity {
     private TextView startDateTextView, endDateTextView, remindHourTextView, tagNameDisplay, priorityName;
     private EditText editNoteText, editTitleText, editTagName;
     private Button saveButton, chooseColor, btnCancel, btnConfirm;
+    private ImageView backButton;
     private View selectColorPreview, selectedColor, priorityView;
     private Tag selectedTag;
     private Priority selectedPriority;
     private List<Tag> tagList;
     private List<Priority> priorities;
-    private Calendar startDateCalendar, endDateCalendar;
     private String userId;
     private int selectedColorValue = Color.parseColor("#FF7676");
 
@@ -69,22 +72,13 @@ public class AddTaskActivity extends AppCompatActivity {
         tagList = new ArrayList<>();
         priorities = new ArrayList<>();
 
-        startDateTextView = binding.startDateTextView;
-        endDateTextView = binding.endDateTextView;
-        editNoteText = binding.editNoteText;
-        editTitleText = binding.editTitleText;
-        saveButton = binding.saveButton;
-        remindHourTextView = binding.remindTextView;
-
         addTaskViewModel = new ViewModelProvider(this).get(AddTaskViewModel.class);
         observeData();
 
-        tagNameDisplay = binding.tagName;
-        selectedColor = binding.tagView;
+        initViews();
 
-        priorityName = binding.priorityName;
-        priorityView = binding.priorityView;
-
+        startDateTextView.setText(DateTimeUtils.getTodayDate());
+        endDateTextView.setText(DateTimeUtils.getTodayDate());
         startDateTextView.setOnClickListener(v -> DateTimeUtils.showDatePicker(startDateTextView));
         endDateTextView.setOnClickListener(v -> DateTimeUtils.showDatePicker(endDateTextView));
 
@@ -112,11 +106,53 @@ public class AddTaskActivity extends AppCompatActivity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                saveNewTask();
+                if(editTitleText.getText().toString().trim().isEmpty()){
+                    Toast.makeText(AddTaskActivity.this, "Vui lòng nhập tiêu đề công việc", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (startDateTextView == null) {
+                    Toast.makeText(AddTaskActivity.this, "Vui lòng chọn ngày bắt đầu", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (endDateTextView == null) {
+                    Toast.makeText(AddTaskActivity.this, "Vui lòng chọn ngày kết thúc", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (selectedTag == null) {
+                    Toast.makeText(AddTaskActivity.this, "Vui lòng chọn chủ đề", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (selectedPriority == null){
+                    Toast.makeText(AddTaskActivity.this, "Vui lòng chọn mức ưu tiên", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if(remindHourTextView.getText().toString().isEmpty()){
+                    Toast.makeText(AddTaskActivity.this, "Vui lòng chọn Thời gian", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                Task newTask = new Task(editTitleText.getText().toString(),
+                        "",
+                        editNoteText.getText().toString(),
+                        DateTimeUtils.convertDateStringToMillis(startDateTextView.getText().toString()),
+                        DateTimeUtils.convertDateStringToMillis(endDateTextView.getText().toString()),
+                        DateTimeUtils.convertTimeStringToMillis(remindHourTextView.getText().toString()),
+                        selectedPriority.getId(),
+                        selectedTag.getId(),
+                        false,
+                        0,
+                        userId);
+
+                saveNewTask(newTask);
             }
         });
 
-        binding.backButton.setOnClickListener(new View.OnClickListener() {
+        backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(AddTaskActivity.this, MainActivity.class));
@@ -124,6 +160,24 @@ public class AddTaskActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    private void initViews(){
+        startDateTextView = binding.startDateTextView;
+        endDateTextView = binding.endDateTextView;
+
+        editNoteText = binding.editNoteText;
+        editTitleText = binding.editTitleText;
+        remindHourTextView = binding.remindTextView;
+
+        saveButton = binding.saveButton;
+        backButton = binding.backButton;
+
+        tagNameDisplay = binding.tagName;
+        selectedColor = binding.tagView;
+
+        priorityName = binding.priorityName;
+        priorityView = binding.priorityView;
     }
 
     private void observeData(){
@@ -228,10 +282,6 @@ public class AddTaskActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    private void saveNewTask(){
-
-    }
-
     private void saveNewTag(Tag tag){
         addTaskViewModel.saveNewTag(tag, new TagRepository.TagCallback() {
             @Override
@@ -274,5 +324,26 @@ public class AddTaskActivity extends AppCompatActivity {
                 })
                 .build()
                 .show();
+    }
+
+    private void saveNewTask(Task newTask){
+        addTaskViewModel.saveNewTask(newTask, new TaskRepository.TaskCallback() {
+            @Override
+            public void onSuccess(String message) {
+                runOnUiThread(() -> {
+                    Toast.makeText(AddTaskActivity.this, message, Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(AddTaskActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                });
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                runOnUiThread(() ->
+                        Toast.makeText(AddTaskActivity.this, errorMessage, Toast.LENGTH_SHORT).show()
+                );
+            }
+        });
     }
 }

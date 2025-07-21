@@ -39,6 +39,28 @@ public class Task {
         this.userId = userId;
     }
 
+    public Task(String id, String title, String description, String note, long startTime, long endTime, long remindAt, boolean isCompleted, long completedAt, long createAt, String priorityId, String tagId, boolean isProgressTask, double successRate, String userId) {
+        this.id = id;
+        this.note = note;
+        this.title = title;
+        this.description = description;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.remindAt = remindAt;
+        this.isCompleted = isCompleted;
+        this.completedAt = completedAt;
+        this.createAt = createAt;
+        this.priorityId = priorityId;
+        this.tagId = tagId;
+        this.isProgressTask = isProgressTask;
+        this.successRate = successRate;
+        this.userId = userId;
+    }
+
+    public String getId() {
+        return id;
+    }
+
     public String getUserId() {
         return userId;
     }

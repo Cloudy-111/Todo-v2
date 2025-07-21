@@ -27,10 +27,10 @@ public class AddTaskViewModel extends ViewModel {
 
     private ExecutorService executor = Executors.newSingleThreadExecutor();
 
-//    public void saveNewTask(Task task, TaskRepository.TaskCallback callback){
-//        taskRepository.saveNewTask(task, callback);
-//    }
-//
+    public void saveNewTask(Task task, TaskRepository.TaskCallback callback){
+        taskRepository.saveNewTask(task, callback);
+    }
+
     public void saveNewTag(Tag tag, TagRepository.TagCallback callback){
         tagRepository.saveNewTag(tag, callback);
     }

@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 
 import com.example.todo_listv2.fake.fakeDB;
 import com.example.todo_listv2.models.Tag;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -64,19 +65,17 @@ public class TagRepository {
 
     public void saveNewTag(Tag newTag, TagCallback callback){
 
-        JSONObject json = new JSONObject();
+        Gson gson = new Gson();
+        String json;
         try {
-            json.put("id", newTag.getId());
-            json.put("name", newTag.getName());
-            json.put("color", newTag.getColor());
-            json.put("userId", newTag.getUserId());
+            json = gson.toJson(newTag);
         } catch (Exception e){
             e.printStackTrace();
             callback.onError("Error Create JSON");
             return;
         }
 
-        RequestBody body = RequestBody.create(json.toString(), MediaType.parse("application/json"));
+        RequestBody body = RequestBody.create(json, MediaType.parse("application/json"));
         Request request = new Request.Builder()
                 .url(baseURL + "/tag/create")
                 .post(body)

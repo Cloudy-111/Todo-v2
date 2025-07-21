@@ -19,7 +19,7 @@ import java.util.Locale;
 
 public class DateTimeUtils {
     public static String getTodayDate() {
-        return new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+        return new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault()).format(new Date());
     }
 
     public static String formatTime(long millis) {
@@ -29,7 +29,7 @@ public class DateTimeUtils {
 
     public static long convertDateStringToMillis(String dateString){
         try{
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault());
             Date date = sdf.parse(dateString);
             return date.getTime();
         } catch (ParseException e){
@@ -78,7 +78,7 @@ public class DateTimeUtils {
         DatePickerDialog datePickerDialog = new DatePickerDialog(
                 targetView.getContext(),
                 (view, selectedYear, selectedMonth, selectedDay) -> {
-                    String selectedDate = selectedYear + "-" + (selectedMonth + 1) + "-" + selectedDay;
+                    String selectedDate = String.format("%04d/%02d/%02d", selectedYear, selectedMonth + 1, selectedDay);
                     targetView.setText(selectedDate);
                 },
                 year, month, day
