@@ -143,4 +143,27 @@ public class TaskRepository {
             }
         });
     }
+
+    public void deleteTaskById(String taskId, TaskCallback callback){
+        Request request = new Request.Builder()
+                .url(baseURL + "/task/delete/" + taskId)
+                .delete()
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                callback.onError(e.getMessage());
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    callback.onSuccess("Task deleted successfully");
+                } else {
+                    callback.onError("Failed to delete task");
+                }
+            }
+        });
+    }
 }

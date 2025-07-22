@@ -61,7 +61,21 @@ public class AddTaskViewModel extends ViewModel {
         _checkListItems.setValue(currentList);
     }
 
-    public void insertChecklistInDB(Checklist item){
+    public void rollBackCreateTaskWhenCreateChecklistError(String taskId){
+        taskRepository.deleteTaskById(taskId, new TaskRepository.TaskCallback() {
+            @Override
+            public void onSuccess(String taskId) {
+                Log.d("TaskRollback", taskId);
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                Log.e("TaskRollbackError", errorMessage);
+            }
+        });
+    }
+
+    public void insertChecklistInDB(Checklist item, CheckListRepository.CheckListCallback callback){
         checkListRepository.insertCheckList(item, new CheckListRepository.CheckListCallback() {
             @Override
             public void onSuccess(String message) {

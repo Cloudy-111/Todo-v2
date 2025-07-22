@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -32,6 +33,7 @@ import com.example.todo_listv2.models.Checklist;
 import com.example.todo_listv2.models.Priority;
 import com.example.todo_listv2.models.Tag;
 import com.example.todo_listv2.models.Task;
+import com.example.todo_listv2.repositories.CheckListRepository;
 import com.example.todo_listv2.repositories.TagRepository;
 import com.example.todo_listv2.repositories.TaskRepository;
 import com.example.todo_listv2.viewModels.AddTaskViewModel;
@@ -370,7 +372,18 @@ public class AddTaskActivity extends AppCompatActivity {
         if (checkListItems.size() > 0) {
             for(Checklist item : checkListItems){
                 item.setTaskId(taskId);
-                addTaskViewModel.insertChecklistInDB(item);
+                addTaskViewModel.insertChecklistInDB(item, new CheckListRepository.CheckListCallback() {
+                    @Override
+                    public void onSuccess(String message) {
+                        Log.d("Checklist", message);
+                    }
+
+                    @Override
+                    public void onError(String errorMessage) {
+                        Log.d("Checklist Error", errorMessage);
+                        addTaskViewModel.rollBackCreateTaskWhenCreateChecklistError(taskId);
+                    }
+                });
             }
 
         }
