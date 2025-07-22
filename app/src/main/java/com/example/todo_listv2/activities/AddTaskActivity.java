@@ -27,6 +27,8 @@ import com.example.todo_listv2.Utils.DateTimeUtils;
 import com.example.todo_listv2.adapters.PriorityAdapter;
 import com.example.todo_listv2.adapters.TagAdapter;
 import com.example.todo_listv2.databinding.ActivityAddTaskBinding;
+import com.example.todo_listv2.fragments.AddChecklistFragment;
+import com.example.todo_listv2.models.Checklist;
 import com.example.todo_listv2.models.Priority;
 import com.example.todo_listv2.models.Tag;
 import com.example.todo_listv2.models.Task;
@@ -50,7 +52,7 @@ public class AddTaskActivity extends AppCompatActivity {
 
     private TextView startDateTextView, endDateTextView, remindHourTextView, tagNameDisplay, priorityName;
     private EditText editNoteText, editTitleText, editTagName;
-    private Button saveButton, chooseColor, btnCancel, btnConfirm;
+    private Button saveButton, addCheckListButton, chooseColor, btnCancel, btnConfirm;
     private ImageView backButton;
     private View selectColorPreview, selectedColor, priorityView;
     private Tag selectedTag;
@@ -136,6 +138,11 @@ public class AddTaskActivity extends AppCompatActivity {
                     return;
                 }
 
+                boolean isProgressTask = false;
+                if(addTaskViewModel.checkListItems.getValue().size() > 0){
+                    isProgressTask = true;
+                }
+
                 Task newTask = new Task(editTitleText.getText().toString(),
                         "",
                         editNoteText.getText().toString(),
@@ -144,12 +151,19 @@ public class AddTaskActivity extends AppCompatActivity {
                         DateTimeUtils.convertTimeStringToMillis(remindHourTextView.getText().toString()),
                         selectedPriority.getId(),
                         selectedTag.getId(),
-                        false,
+                        isProgressTask,
                         0,
                         userId);
 
                 saveNewTask(newTask);
             }
+        });
+
+        addCheckListButton.setOnClickListener(v -> {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragmentContainer, new AddChecklistFragment())
+                    .addToBackStack(null)
+                    .commit();
         });
 
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -172,6 +186,7 @@ public class AddTaskActivity extends AppCompatActivity {
 
         saveButton = binding.saveButton;
         backButton = binding.backButton;
+        addCheckListButton = binding.addCheckListButton;
 
         tagNameDisplay = binding.tagName;
         selectedColor = binding.tagView;
@@ -329,9 +344,12 @@ public class AddTaskActivity extends AppCompatActivity {
     private void saveNewTask(Task newTask){
         addTaskViewModel.saveNewTask(newTask, new TaskRepository.TaskCallback() {
             @Override
-            public void onSuccess(String message) {
+            public void onSuccess(String taskId) {
                 runOnUiThread(() -> {
-                    Toast.makeText(AddTaskActivity.this, message, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddTaskActivity.this, taskId, Toast.LENGTH_SHORT).show();
+
+                    saveChecklistForTask(taskId);
+
                     Intent intent = new Intent(AddTaskActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
@@ -345,5 +363,16 @@ public class AddTaskActivity extends AppCompatActivity {
                 );
             }
         });
+    }
+
+    private void saveChecklistForTask(String taskId){
+        List<Checklist> checkListItems = addTaskViewModel.getCurrentChecklist();
+        if (checkListItems.size() > 0) {
+            for(Checklist item : checkListItems){
+                item.setTaskId(taskId);
+                addTaskViewModel.insertChecklistInDB(item);
+            }
+
+        }
     }
 }

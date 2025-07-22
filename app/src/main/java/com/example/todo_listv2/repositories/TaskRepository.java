@@ -32,7 +32,7 @@ public class TaskRepository {
     private final String baseURL = "http://192.168.10.104:5000";
 
     public interface TaskCallback{
-        void onSuccess(String message);
+        void onSuccess(String taskId);
         void onError(String error);
     }
 
@@ -129,7 +129,7 @@ public class TaskRepository {
                         if (success){
                             String taskId = resJSON.getString("taskId");
                             String message = resJSON.getString("message");
-                            callback.onSuccess(message + " " + taskId);
+                            callback.onSuccess(taskId);
                         } else {
                             callback.onError(resJSON.getString("message"));
                         }

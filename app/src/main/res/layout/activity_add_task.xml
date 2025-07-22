@@ -271,7 +271,7 @@
             android:gravity="bottom">
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/complete_task_button"
+                android:id="@+id/add_check_list_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/background_button_complete_task"
@@ -296,4 +296,10 @@
         </LinearLayout>
 
     </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/fragmentContainer"
+        android:elevation="10dp"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
