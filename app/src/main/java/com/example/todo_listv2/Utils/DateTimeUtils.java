@@ -38,6 +38,18 @@ public class DateTimeUtils {
         }
     }
 
+    public static String convertMillisToDateString(long millis){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+        Date date = new Date(millis);
+        return sdf.format(date);
+    }
+
+    public static String convertMillisToTimeString(long millis){
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+        Date date = new Date(millis);
+        return sdf.format(date);
+    }
+
     public static long convertTimeStringToMillis(String timeString){
         try{
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());

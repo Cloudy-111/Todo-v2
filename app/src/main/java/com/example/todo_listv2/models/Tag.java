@@ -8,6 +8,8 @@ public class Tag {
     private String name;
     private String userId;
 
+    public Tag(){}
+
     public Tag(String userId, String color, String name) {
         this.id = UUID.randomUUID().toString();
         this.userId = userId;

@@ -29,8 +29,13 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int TASK_PROGRESS_TYPE = 2;
     private List<ListItemTask> listItemTasks;
     private Map<String, Tag> mapTag;
+    private OnClickTaskItem itemListener;
 
-    public TaskAdapter(List<ListItemTask> listItemTasks, List<Tag> listTag){
+    public interface OnClickTaskItem{
+        void onTaskItemClicked(String taskId);
+    }
+
+    public TaskAdapter(List<ListItemTask> listItemTasks, List<Tag> listTag, OnClickTaskItem listener){
         this.listItemTasks = listItemTasks;
 
         mapTag = new HashMap<>();
@@ -39,6 +44,8 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 mapTag.put(tag.getId(), tag);
             }
         }
+
+        this.itemListener = listener;
     }
 
     @Override
@@ -69,6 +76,14 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         } else {
             ((TaskProgressViewHolder) holder).bind((TaskItemWrapper) item, mapTag);
         }
+
+        if(item.getItemType() != HEADER_TYPE){
+            holder.itemView.setOnClickListener(v -> {
+                String taskId = ((TaskItemWrapper) item).getTask().getId();
+                itemListener.onTaskItemClicked(taskId);
+            });
+        }
+
     }
 
     @Override

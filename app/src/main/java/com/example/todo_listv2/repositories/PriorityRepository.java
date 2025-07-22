@@ -51,4 +51,28 @@ public class PriorityRepository {
 
 
     }
+
+    public Priority getPriorityById(String priorityId){
+        Request request = new Request.Builder()
+                .url(baseURL + "/priority/" + priorityId)
+                .header("Accept", "application/json")
+                .header("Content-Type", "application/json")
+                .build();
+
+        Priority result = new Priority();
+        try {
+            Response response = client.newCall(request).execute();
+            if (response.isSuccessful()) {
+                String resStr = response.body().string();
+                JSONObject json = new JSONObject(resStr);
+                result = new Priority(json.getString("id"),
+                        json.getString("name"),
+                        json.getString("color"),
+                        json.getInt("level"));
+            }
+        } catch (IOException | JSONException e){
+            e.printStackTrace();
+        }
+        return result;
+    }
 }

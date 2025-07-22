@@ -11,6 +11,8 @@ import com.google.gson.Gson;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -80,5 +82,9 @@ public class CheckListRepository {
                 }
             }
         });
+    }
+
+    public List<Checklist> getAllChecklistByTaskId(String taskId){
+        return new ArrayList<>();
     }
 }

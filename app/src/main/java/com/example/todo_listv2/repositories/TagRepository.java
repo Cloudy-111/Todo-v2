@@ -125,7 +125,27 @@ public class TagRepository {
     }
 
 
-//    public Tag getTagByTaskId(String taskId){
-//
-//    }
+    public Tag getTagById(String tagId){
+        Request request = new Request.Builder()
+                .url(baseURL + "/tag/getByTagId/" + tagId)
+                .header("Accept", "application/json")
+                .header("Content-Type", "application/json")
+                .build();
+
+        Tag result = new Tag();
+        try {
+            Response response = client.newCall(request).execute();
+            if (response.isSuccessful()) {
+                String resStr = response.body().string();
+                JSONObject json = new JSONObject(resStr);
+                result = new Tag(json.getString("id"),
+                        json.getString("user_id"),
+                        json.getString("color"),
+                        json.getString("name"));
+            }
+        } catch (IOException | JSONException e){
+            e.printStackTrace();
+        }
+        return result;
+    }
 }

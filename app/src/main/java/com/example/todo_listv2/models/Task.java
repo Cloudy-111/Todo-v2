@@ -21,6 +21,7 @@ public class Task {
     private double successRate;
     private String userId;
 
+    public Task(){}
     public Task(String title, String description, String note, long startTime, long endTime, long remindAt, String priorityId, String tagId, boolean isProgressTask, double successRate, String userId) {
         this.id = UUID.randomUUID().toString();
         this.note = note;

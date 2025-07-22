@@ -86,7 +86,42 @@ public class TaskRepository {
     }
 
     public Task getTaskById(String taskId){
-        return fakeDB.getTaskById(taskId);
+        Request request = new Request.Builder()
+                .url(baseURL + "/task/" + taskId)
+                .header("Accept", "application/json")
+                .header("Content-Type", "application/json")
+                .build();
+
+        Task result = new Task();
+        try{
+            Response response = client.newCall(request).execute();
+            if(response.isSuccessful()){
+                String resStr = response.body().string();
+                JSONObject json = new JSONObject(resStr);
+                result = new Task(
+                        json.getString("id"),
+                        json.getString("title"),
+                        json.getString("description"),
+                        json.getString("note"),
+                        json.getLong("startTime"),
+                        json.getLong("endTime"),
+                        json.getLong("remindAt"),
+                        json.getBoolean("isCompleted"),
+                        json.getLong("completedAt"),
+                        json.getLong("createAt"),
+                        json.getString("priorityId"),
+                        json.getString("tagId"),
+                        json.getBoolean("isProgressTask"),
+                        json.getDouble("successRate"),
+                        json.getString("userId")
+                );
+
+                Log.d("TASK", result.toString());
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return result;
     }
 
     public void saveNewTask(Task newTask, TaskCallback callback){

@@ -93,7 +93,15 @@ public class TodayFragment extends Fragment implements WeekDayAdapter.OnItemList
     }
 
     private void setRecyclerTaskView(){
-        taskAdapter = new TaskAdapter(new ArrayList<>(), new ArrayList<>());
+        taskAdapter = new TaskAdapter(new ArrayList<>(), new ArrayList<>(), taskId -> {
+            DetailTaskFragment fragment = new DetailTaskFragment();
+
+            Bundle args = new Bundle();
+            args.putString("taskId", taskId);
+            fragment.setArguments(args);
+
+            fragment.show(requireActivity().getSupportFragmentManager(), "FullScreenDialog");
+        });
         binding.recyclerViewTask.setLayoutManager(new LinearLayoutManager(getActivity()));
         binding.recyclerViewTask.setAdapter(taskAdapter);
     }

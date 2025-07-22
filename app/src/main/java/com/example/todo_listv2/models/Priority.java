@@ -8,6 +8,7 @@ public class Priority {
     private String colorHex;
     private int level;
 
+    public Priority(){}
     public Priority(String name, String colorHex, int level) {
         this.id = UUID.randomUUID().toString();
         this.name = name;
