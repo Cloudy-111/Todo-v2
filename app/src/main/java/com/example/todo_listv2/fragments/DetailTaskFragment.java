@@ -23,9 +23,13 @@ import com.example.todo_listv2.R;
 import com.example.todo_listv2.Utils.DateTimeUtils;
 import com.example.todo_listv2.adapters.CheckListItemDisplayAdapter;
 import com.example.todo_listv2.databinding.FragmentDetailTaskBinding;
+import com.example.todo_listv2.models.Checklist;
 import com.example.todo_listv2.viewModels.TaskDetailViewModel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class DetailTaskFragment extends DialogFragment {
     private FragmentDetailTaskBinding binding;
@@ -39,6 +43,8 @@ public class DetailTaskFragment extends DialogFragment {
     private RecyclerView checklistItemsRecyclerView;
     private View progressGroup;
     private CheckListItemDisplayAdapter adapter;
+    private Map<String, Boolean> initialMapItemStatus = new HashMap<>();
+    private Map<String, Boolean> currentMapItemStatus = new HashMap<>();
     public DetailTaskFragment(){}
 
     @Nullable
@@ -81,6 +87,29 @@ public class DetailTaskFragment extends DialogFragment {
                     ViewGroup.LayoutParams.WRAP_CONTENT
             );
         }
+    }
+
+    @Override
+    public void onDestroyView(){
+        super.onDestroyView();
+
+        List<String> listItemNeedUpdate = new ArrayList<>();
+        for(Map.Entry<String, Boolean> entry : currentMapItemStatus.entrySet()){
+            String itemId = entry.getKey();
+            Boolean newStatus = entry.getValue();
+
+            Boolean originalStatus = initialMapItemStatus.get(itemId);
+            if(originalStatus != null && originalStatus != newStatus){
+                listItemNeedUpdate.add(itemId);
+            }
+        }
+
+        if(!listItemNeedUpdate.isEmpty()){
+            taskDetailViewModel.updateChecklistItem(listItemNeedUpdate);
+        }
+
+        initialMapItemStatus.clear();
+        currentMapItemStatus.clear();
     }
 
     private void initViews(){
@@ -133,12 +162,17 @@ public class DetailTaskFragment extends DialogFragment {
 
         taskDetailViewModel.checklistItems.observe(getViewLifecycleOwner(), checklists -> {
             adapter.updateData(checklists);
+            for(Checklist item : checklists){
+                initialMapItemStatus.put(item.getId(), item.isCompleted());
+                currentMapItemStatus.put(item.getId(), item.isCompleted());
+            }
         });
     }
 
     private void setUpChecklistRecycler(){
         adapter = new CheckListItemDisplayAdapter(new ArrayList<>(), (item, isChecked) -> {
-
+            item.setCompleted(isChecked);
+            currentMapItemStatus.put(item.getId(), isChecked);
         });
         checklistItemsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         checklistItemsRecyclerView.setAdapter(adapter);

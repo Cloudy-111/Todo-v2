@@ -1,5 +1,6 @@
 package com.example.todo_listv2.adapters;
 
+import android.app.AlertDialog;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.LayoutInflater;
@@ -21,7 +22,7 @@ public class CheckListItemDisplayAdapter extends RecyclerView.Adapter<CheckListI
     public onCheckItemListener listener;
 
     public interface onCheckItemListener{
-        void onItemClicked(Checklist item, boolean isChecked);
+        void onItemChecked(Checklist item, boolean isChecked);
     }
 
     public CheckListItemDisplayAdapter(List<Checklist> list, onCheckItemListener listener){
@@ -48,6 +49,16 @@ public class CheckListItemDisplayAdapter extends RecyclerView.Adapter<CheckListI
             viewHolder.contentChecklist.setPaintFlags(viewHolder.contentChecklist.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             viewHolder.contentChecklist.setTextColor(Color.GRAY);
         }
+
+        viewHolder.checkBox.setOnCheckedChangeListener(((buttonView, isChecked) -> {
+            if(isChecked) {
+                listener.onItemChecked(item, true);
+            } else {
+                if(listener != null){
+                    listener.onItemChecked(item, false);
+                }
+            }
+        }));
     }
 
     @Override

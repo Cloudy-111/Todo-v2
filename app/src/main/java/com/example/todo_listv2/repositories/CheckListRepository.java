@@ -114,4 +114,26 @@ public class CheckListRepository {
         }
         return result;
     }
+
+    public void updateChecklistItem(List<String> listItemNeedUpdate, CheckListCallback callback){
+        String json = new Gson().toJson(listItemNeedUpdate);
+        RequestBody body = RequestBody.create(json, MediaType.parse("application/json"));
+
+        Request request = new Request.Builder()
+                .url(baseURL + "/checklist/toggleCompleted")
+                .put(body)
+                .build();
+
+        new Thread(() -> {
+            try (Response response = client.newCall(request).execute()) {
+                if (response.isSuccessful()) {
+                    callback.onSuccess("Checklist updated successfully");
+                } else {
+                    callback.onError("Failed with code: " + response.code());
+                }
+            } catch (Exception e) {
+                callback.onError("Exception: " + e.getMessage());
+            }
+        }).start();
+    }
 }

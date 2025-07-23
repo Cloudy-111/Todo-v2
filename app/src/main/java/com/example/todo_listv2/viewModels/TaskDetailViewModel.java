@@ -1,5 +1,7 @@
 package com.example.todo_listv2.viewModels;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -56,5 +58,19 @@ public class TaskDetailViewModel extends ViewModel {
 
     public void loadPriority(String priorityId){
         executor.execute(() -> _priority.postValue(priorityRepository.getPriorityById(priorityId)));
+    }
+
+    public void updateChecklistItem(List<String> listItemNeedUpdate){
+        checkListRepository.updateChecklistItem(listItemNeedUpdate, new CheckListRepository.CheckListCallback() {
+            @Override
+            public void onSuccess(String message) {
+                Log.d("Checklist", message);
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                Log.e("Checklist", errorMessage);
+            }
+        });
     }
 }
