@@ -39,6 +39,7 @@ public class TodayFragment extends Fragment implements WeekDayAdapter.OnItemList
     private List<WeekDay> weekDays;
     private TaskDayViewModel taskDayViewModel;
     private TaskAdapter taskAdapter;
+    private String user_id;
     public TodayFragment(){}
 
     @Nullable
@@ -53,7 +54,7 @@ public class TodayFragment extends Fragment implements WeekDayAdapter.OnItemList
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
         preferences = getActivity().getSharedPreferences("MyAppPrefs", getContext().MODE_PRIVATE);
-        String user_id = preferences.getString("user_id", "1");
+        user_id = preferences.getString("user_id", "1");
         taskDayViewModel = new ViewModelProvider(this).get(TaskDayViewModel.class);
 
         initCalendar();
@@ -95,6 +96,11 @@ public class TodayFragment extends Fragment implements WeekDayAdapter.OnItemList
     private void setRecyclerTaskView(){
         taskAdapter = new TaskAdapter(new ArrayList<>(), new ArrayList<>(), taskId -> {
             DetailTaskFragment fragment = new DetailTaskFragment();
+
+            //Reload Data
+            fragment.setOnTaskUpdatedListener(() -> {
+                taskDayViewModel.loadData(DateTimeUtils.getTodayDate(), user_id);
+            });
 
             Bundle args = new Bundle();
             args.putString("taskId", taskId);

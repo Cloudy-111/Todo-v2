@@ -141,7 +141,7 @@ public class AddTaskActivity extends AppCompatActivity {
                 }
 
                 boolean isProgressTask = false;
-                if(addTaskViewModel.checkListItems.getValue().size() > 0){
+                if(addTaskViewModel.checkListItems.getValue() != null && addTaskViewModel.checkListItems.getValue().size() > 0){
                     isProgressTask = true;
                 }
 

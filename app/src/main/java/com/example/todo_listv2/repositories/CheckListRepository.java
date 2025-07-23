@@ -24,8 +24,8 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class CheckListRepository {
-    private OkHttpClient client = new OkHttpClient();
-    private String baseURL = "http://192.168.10.104:5000";
+    private static OkHttpClient client = new OkHttpClient();
+    private static String baseURL = "http://192.168.10.104:5000";
 
     public interface CheckListCallback{
         void onSuccess(String message);
@@ -59,15 +59,10 @@ public class CheckListRepository {
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 if (response.isSuccessful() && response.body() != null) {
                     try {
-                        // Đọc nội dung JSON string
                         String resStr = response.body().string();
-                        Log.d("HTTP_RESPONSE", "Raw response: " + resStr);
 
-                        // Parse JSON
                         JSONObject resJSON = new JSONObject(resStr);
-                        Log.d("JSON", resJSON.toString());
 
-                        // Xử lý dữ liệu
                         boolean success = resJSON.getBoolean("success");
                         if (success){
                             callback.onSuccess(resJSON.getString("message"));
@@ -85,7 +80,7 @@ public class CheckListRepository {
         });
     }
 
-    public List<Checklist> getAllChecklistByTaskId(String taskId){
+    public static List<Checklist> getAllChecklistByTaskId(String taskId){
         Request request = new Request.Builder()
                 .url(baseURL + "/checklist/getAllByTaskId/" + taskId)
                 .header("Accept", "application/json")
@@ -127,12 +122,21 @@ public class CheckListRepository {
         new Thread(() -> {
             try (Response response = client.newCall(request).execute()) {
                 if (response.isSuccessful()) {
-                    callback.onSuccess("Checklist updated successfully");
+                    Log.d("Checklist", "Checklist updated successfully");
+                    if (callback != null) {
+                        callback.onSuccess("Checklist updated");
+                    }
                 } else {
-                    callback.onError("Failed with code: " + response.code());
+                    Log.d("Checklist","Failed with code: " + response.code());
+                    if (callback != null) {
+                        callback.onError("Error code: " + response.code());
+                    }
                 }
             } catch (Exception e) {
-                callback.onError("Exception: " + e.getMessage());
+                Log.d("Checklist","Exception: " + e.getMessage());
+                if (callback != null) {
+                    callback.onError(e.getMessage());
+                }
             }
         }).start();
     }

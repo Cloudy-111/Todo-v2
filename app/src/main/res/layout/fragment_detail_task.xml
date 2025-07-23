@@ -280,7 +280,13 @@
                         android:textStyle="bold"
                         android:layout_weight="1"/>
 
-                    <include layout="@layout/progress_bar_group"/>
+                    <TextView
+                        android:id="@+id/percent_progress_task"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="100%"
+                        android:textSize="18sp"
+                        android:textColor="@color/black"/>
                 </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView

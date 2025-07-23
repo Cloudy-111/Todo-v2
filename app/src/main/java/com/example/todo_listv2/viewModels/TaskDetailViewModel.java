@@ -60,17 +60,15 @@ public class TaskDetailViewModel extends ViewModel {
         executor.execute(() -> _priority.postValue(priorityRepository.getPriorityById(priorityId)));
     }
 
-    public void updateChecklistItem(List<String> listItemNeedUpdate){
-        checkListRepository.updateChecklistItem(listItemNeedUpdate, new CheckListRepository.CheckListCallback() {
-            @Override
-            public void onSuccess(String message) {
-                Log.d("Checklist", message);
-            }
+    public void makeTaskCompleted(String taskId, TaskRepository.TaskCallback callback){
+        taskRepository.makeTaskCompleted(taskId);
+    }
 
-            @Override
-            public void onError(String errorMessage) {
-                Log.e("Checklist", errorMessage);
-            }
-        });
+    public void updateChecklistItem(List<String> listItemNeedUpdate, CheckListRepository.CheckListCallback callback){
+        checkListRepository.updateChecklistItem(listItemNeedUpdate, callback);
+    }
+
+    public void updateProgressTask(String taskId, double successRate){
+        taskRepository.updateProgressTask(taskId, successRate);
     }
 }

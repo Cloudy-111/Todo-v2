@@ -1,10 +1,12 @@
 package com.example.todo_listv2.fragments;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +26,8 @@ import com.example.todo_listv2.Utils.DateTimeUtils;
 import com.example.todo_listv2.adapters.CheckListItemDisplayAdapter;
 import com.example.todo_listv2.databinding.FragmentDetailTaskBinding;
 import com.example.todo_listv2.models.Checklist;
+import com.example.todo_listv2.repositories.CheckListRepository;
+import com.example.todo_listv2.repositories.TaskRepository;
 import com.example.todo_listv2.viewModels.TaskDetailViewModel;
 
 import java.util.ArrayList;
@@ -34,10 +38,10 @@ import java.util.Map;
 public class DetailTaskFragment extends DialogFragment {
     private FragmentDetailTaskBinding binding;
     private SharedPreferences preferences;
-    private String userId;
+    private String userId, taskId;
     private ImageButton closeButton, editButton;
     private Button completedTaskButton;
-    private TextView nameTask, nameTag, namePriority, noteTask, statusTask, startDateTask, endDateTask, remindAtTask;
+    private TextView nameTask, nameTag, namePriority, noteTask, statusTask, startDateTask, endDateTask, remindAtTask, percent_complete_task;
     private TaskDetailViewModel taskDetailViewModel;
     private View tagColorView, priorityColorView;
     private RecyclerView checklistItemsRecyclerView;
@@ -45,6 +49,17 @@ public class DetailTaskFragment extends DialogFragment {
     private CheckListItemDisplayAdapter adapter;
     private Map<String, Boolean> initialMapItemStatus = new HashMap<>();
     private Map<String, Boolean> currentMapItemStatus = new HashMap<>();
+    private OnTaskUpdatedListener listener;
+
+    // Use for Reload data when destroy fragment
+    public interface OnTaskUpdatedListener{
+        void onTaskUpdated();
+    }
+
+    public void setOnTaskUpdatedListener(OnTaskUpdatedListener listener){
+        this.listener = listener;
+    }
+
     public DetailTaskFragment(){}
 
     @Nullable
@@ -63,7 +78,7 @@ public class DetailTaskFragment extends DialogFragment {
         preferences = getActivity().getSharedPreferences("MyAppPrefs", getContext().MODE_PRIVATE);
         userId = preferences.getString("user_id", "1");
         taskDetailViewModel = new ViewModelProvider(this).get(TaskDetailViewModel.class);
-        String taskId = getArguments() != null ? getArguments().getString("taskId") : null;
+        taskId = getArguments() != null ? getArguments().getString("taskId") : null;
 
         initViews();
         observeData();
@@ -93,19 +108,57 @@ public class DetailTaskFragment extends DialogFragment {
     public void onDestroyView(){
         super.onDestroyView();
 
+        int completedItems = 0;
         List<String> listItemNeedUpdate = new ArrayList<>();
-        for(Map.Entry<String, Boolean> entry : currentMapItemStatus.entrySet()){
-            String itemId = entry.getKey();
-            Boolean newStatus = entry.getValue();
+        for(String itemId : currentMapItemStatus.keySet()){
+            boolean newStatus = currentMapItemStatus.get(itemId);
+            boolean originalStatus = initialMapItemStatus.get(itemId);
 
-            Boolean originalStatus = initialMapItemStatus.get(itemId);
-            if(originalStatus != null && originalStatus != newStatus){
+            if(newStatus == true){
+                completedItems += 1;
+            }
+
+            if(originalStatus != newStatus){
                 listItemNeedUpdate.add(itemId);
             }
         }
 
         if(!listItemNeedUpdate.isEmpty()){
-            taskDetailViewModel.updateChecklistItem(listItemNeedUpdate);
+            taskDetailViewModel.updateChecklistItem(listItemNeedUpdate, new CheckListRepository.CheckListCallback() {
+                @Override
+                public void onSuccess(String message) {
+                    List<Checklist> updatedList = taskDetailViewModel.checklistItems.getValue();
+                    int completedItems = 0;
+                    for(Checklist item : updatedList){
+                        if(item.isCompleted()) completedItems += 1;
+                    }
+                    double successRate = (double) completedItems / updatedList.size();
+                    taskDetailViewModel.updateProgressTask(taskId, successRate);
+                    if(listener != null){
+                        listener.onTaskUpdated();
+                    }
+                }
+
+                @Override
+                public void onError(String errorMessage) {
+
+                }
+            });
+        }
+        if(completedItems == initialMapItemStatus.size()){
+            taskDetailViewModel.makeTaskCompleted(taskId, new TaskRepository.TaskCallback() {
+                @Override
+                public void onSuccess(String taskId) {
+                    if(listener != null){
+                        listener.onTaskUpdated();
+                    }
+                }
+
+                @Override
+                public void onError(String error) {
+
+                }
+            });
         }
 
         initialMapItemStatus.clear();
@@ -125,6 +178,7 @@ public class DetailTaskFragment extends DialogFragment {
         startDateTask = binding.startDateTextView;
         endDateTask = binding.endDateTextView;
         remindAtTask = binding.remindTextView;
+        percent_complete_task = binding.percentProgressTask;
 
         tagColorView = binding.tagColorView;
         priorityColorView = binding.priorityColorView;
@@ -141,6 +195,7 @@ public class DetailTaskFragment extends DialogFragment {
                 startDateTask.setText(DateTimeUtils.convertMillisToDateString(task.getStartTime()));
                 endDateTask.setText(DateTimeUtils.convertMillisToDateString(task.getEndTime()));
                 remindAtTask.setText(DateTimeUtils.convertMillisToTimeString(task.getRemindAt()));
+                percent_complete_task.setText(String.format("%.2f", task.getSuccessRate() * 100) + "%");
             }
         });
 
@@ -191,6 +246,24 @@ public class DetailTaskFragment extends DialogFragment {
         });
 
         completedTaskButton.setOnClickListener(v -> {
+            new AlertDialog.Builder(getContext())
+                    .setTitle("Confirm")
+                    .setMessage("Are you sure about that?")
+                    .setPositiveButton("YES", ((dialog, which) -> {
+                        for(String itemId : initialMapItemStatus.keySet()){
+                            currentMapItemStatus.put(itemId, true);
+                        }
+
+                        requireActivity().getSupportFragmentManager()
+                                .beginTransaction()
+                                .remove(this)
+                                .commit();
+                    }))
+                    .setNegativeButton("NO", ((dialog, which) -> {
+
+                    }))
+                    .setCancelable(false)
+                    .show();
 
         });
     }

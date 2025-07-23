@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 
 import com.bumptech.glide.RequestBuilder;
 import com.example.todo_listv2.fake.fakeDB;
+import com.example.todo_listv2.models.Checklist;
 import com.example.todo_listv2.models.Tag;
 import com.example.todo_listv2.models.Task;
 import com.google.gson.Gson;
@@ -200,5 +201,62 @@ public class TaskRepository {
                 }
             }
         });
+    }
+
+    public void makeTaskCompleted(String taskId){
+        Request request = new Request.Builder()
+                .url(baseURL + "/task/completed/" + taskId)
+                .put(RequestBody.create("", MediaType.parse("application/json")))
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+                Log.d("Task", "Exception: " + (e.getMessage() != null ? e.getMessage() : "Unknown error"));
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    Log.d("Task", "Task Completed");
+                } else {
+                    Log.d("Task", "Failed to complete task");
+                }
+            }
+        });
+    }
+
+    public void updateProgressTask(String taskId, double successRate){
+        JSONObject json = new JSONObject();
+        try {
+            json.put("successRate", successRate);
+
+            RequestBody body = RequestBody.create(json.toString(), MediaType.parse("application/json"));
+            Request request = new Request.Builder()
+                    .url(baseURL + "/task/updateProgress/" + taskId)
+                    .post(body)
+                    .build();
+
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    e.printStackTrace();
+//                    Log.d("Task", "Exception: " + (e.getMessage() != null ? e.getMessage() : "Unknown error"));
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    if (response.isSuccessful()) {
+//                        Log.d("Task", "Task Updated");
+                    } else {
+//                        Log.d("Task", "Failed to complete task");
+                    }
+                }
+            });
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 }
