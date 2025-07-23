@@ -15,6 +15,13 @@ public class Checklist {
         this.taskId = "-1";
     }
 
+    public Checklist(String id, String content, boolean isCompleted, String taskId) {
+        this.id = id;
+        this.content = content;
+        this.isCompleted = isCompleted;
+        this.taskId = taskId;
+    }
+
     public String getId() {
         return id;
     }

@@ -8,6 +8,7 @@ import com.example.todo_listv2.models.Checklist;
 import com.example.todo_listv2.models.Tag;
 import com.google.gson.Gson;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -85,6 +86,32 @@ public class CheckListRepository {
     }
 
     public List<Checklist> getAllChecklistByTaskId(String taskId){
-        return new ArrayList<>();
+        Request request = new Request.Builder()
+                .url(baseURL + "/checklist/getAllByTaskId/" + taskId)
+                .header("Accept", "application/json")
+                .header("Content-Type", "application/json")
+                .build();
+
+        List<Checklist> result = new ArrayList<>();
+        try{
+            Response response = client.newCall(request).execute();
+            if(response.isSuccessful()){
+                String resStr = response.body().string();
+                JSONArray resJSON = new JSONArray(resStr);
+                for(int i = 0; i < resJSON.length(); i++){
+                    JSONObject json = resJSON.getJSONObject(i);
+                    Checklist item = new Checklist(
+                            json.getString("id"),
+                            json.getString("content"),
+                            json.getBoolean("isCompleted"),
+                            json.getString("taskId")
+                    );
+                    result.add(item);
+                }
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return result;
     }
 }

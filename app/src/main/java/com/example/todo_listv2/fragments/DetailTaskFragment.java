@@ -16,12 +16,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.todo_listv2.R;
 import com.example.todo_listv2.Utils.DateTimeUtils;
+import com.example.todo_listv2.adapters.CheckListItemDisplayAdapter;
 import com.example.todo_listv2.databinding.FragmentDetailTaskBinding;
 import com.example.todo_listv2.viewModels.TaskDetailViewModel;
+
+import java.util.ArrayList;
 
 public class DetailTaskFragment extends DialogFragment {
     private FragmentDetailTaskBinding binding;
@@ -34,6 +38,7 @@ public class DetailTaskFragment extends DialogFragment {
     private View tagColorView, priorityColorView;
     private RecyclerView checklistItemsRecyclerView;
     private View progressGroup;
+    private CheckListItemDisplayAdapter adapter;
     public DetailTaskFragment(){}
 
     @Nullable
@@ -57,6 +62,7 @@ public class DetailTaskFragment extends DialogFragment {
         initViews();
         observeData();
 
+        setUpChecklistRecycler();
         if(taskId != null){
             taskDetailViewModel.loadData(taskId);
         }
@@ -93,6 +99,8 @@ public class DetailTaskFragment extends DialogFragment {
 
         tagColorView = binding.tagColorView;
         priorityColorView = binding.priorityColorView;
+
+        checklistItemsRecyclerView = binding.checklistItems;
     }
 
     private void observeData(){
@@ -122,6 +130,18 @@ public class DetailTaskFragment extends DialogFragment {
                 priorityColorView.setBackgroundTintList(ColorStateList.valueOf(color));
             }
         });
+
+        taskDetailViewModel.checklistItems.observe(getViewLifecycleOwner(), checklists -> {
+            adapter.updateData(checklists);
+        });
+    }
+
+    private void setUpChecklistRecycler(){
+        adapter = new CheckListItemDisplayAdapter(new ArrayList<>(), (item, isChecked) -> {
+
+        });
+        checklistItemsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        checklistItemsRecyclerView.setAdapter(adapter);
     }
 
     private void listenerOnclick(){
