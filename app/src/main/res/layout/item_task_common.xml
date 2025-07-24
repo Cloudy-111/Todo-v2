@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingHorizontal="20dp"
+    android:paddingVertical="5dp">
+
+<!--    <View-->
+<!--        android:id="@+id/priority_color_view"-->
+<!--        android:layout_width="15dp"-->
+<!--        android:layout_height="15dp"-->
+<!--        android:background="@drawable/background_circle_1"-->
+<!--        android:backgroundTint="@color/secondary"-->
+<!--        android:layout_marginRight="15dp"/>-->
+
+    <TextView
+        android:id="@+id/name_task"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Lorem ipsum dolor sit amet, consectetur"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:maxLines="1"/>
+
+    <TextView
+        android:id="@+id/time_task"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="9:00"
+        android:gravity="end"
+        android:layout_weight="1"
+        android:textColor="@color/black"/>
+</LinearLayout>

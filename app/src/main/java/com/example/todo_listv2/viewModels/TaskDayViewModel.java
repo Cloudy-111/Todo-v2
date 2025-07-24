@@ -10,6 +10,7 @@ import com.example.todo_listv2.adapters.ListItemTask;
 import com.example.todo_listv2.models.Priority;
 import com.example.todo_listv2.models.PriorityHeaderItem;
 import com.example.todo_listv2.models.Tag;
+import com.example.todo_listv2.models.TagHeaderItem;
 import com.example.todo_listv2.models.Task;
 import com.example.todo_listv2.models.TaskItemWrapper;
 import com.example.todo_listv2.repositories.PriorityRepository;
@@ -64,7 +65,7 @@ public class TaskDayViewModel extends ViewModel {
                     tasksForPriority.add(t);
                 }
             }
-            Log.d("TASK: ", String.valueOf(tasksForPriority.size()));
+            Log.d("TASK FOR PRIORITY: ", String.valueOf(tasksForPriority.size()));
 
             if (!tasksForPriority.isEmpty()) {
                 result.add(new PriorityHeaderItem(priority)); // Header
@@ -75,6 +76,47 @@ public class TaskDayViewModel extends ViewModel {
                 // Optional: thêm progress bar nếu muốn
 //                int completedCount = (int) tasksForPriority.stream().filter(Task::isCompleted).count();
 //                result.add(new TaskProgressItem(completedCount, tasksForPriority.size()));
+            }
+        }
+
+        return result;
+    }
+
+    public void loadDataByTag(String userId){
+        executor.execute(() -> {
+            List<Tag> tags = tagRepository.getAllTagByUserId(userId);
+            List<Task> tasks = taskRepository.getTaskByTagAndUserId(5, userId, tags);
+
+            // Tạo map từ tagId -> Tag để truyền vào adapter
+            Map<String, Tag> tagMap = new HashMap<>();
+            for (Tag tag : tags) {
+                tagMap.put(tag.getId(), tag);
+            }
+            _tagMap.postValue(tagMap);
+
+            // Tạo danh sách hiển thị cho adapter (listItemTasks)
+            List<ListItemTask> result = buildItemListByTag(tasks, tags);
+            _listItemTasks.postValue(result);
+        });
+    }
+
+    public List<ListItemTask> buildItemListByTag(List<Task> tasks, List<Tag> tags){
+        List<ListItemTask> result = new ArrayList<>();
+
+        for (Tag tag : tags) {
+            List<Task> tasksForTag = new ArrayList<>();
+            for (Task t : tasks) {
+                if (t.getTagId().equals(tag.getId())) {
+                    tasksForTag.add(t);
+                }
+            }
+            Log.d("TASK FOR TAG: ", String.valueOf(tasksForTag.size()));
+
+            if (!tasksForTag.isEmpty()) {
+                result.add(new TagHeaderItem(tag)); // Header
+                for (Task task : tasksForTag) {
+                    result.add(new TaskItemWrapper(task));
+                }
             }
         }
 

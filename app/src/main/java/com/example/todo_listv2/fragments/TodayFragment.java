@@ -94,7 +94,7 @@ public class TodayFragment extends Fragment implements WeekDayAdapter.OnItemList
     }
 
     private void setRecyclerTaskView(){
-        taskAdapter = new TaskAdapter(new ArrayList<>(), new ArrayList<>(), taskId -> {
+        taskAdapter = new TaskAdapter(new ArrayList<>(), new ArrayList<>(), TaskAdapter.MODE_TODAY_TASK, taskId -> {
             DetailTaskFragment fragment = new DetailTaskFragment();
 
             //Reload Data

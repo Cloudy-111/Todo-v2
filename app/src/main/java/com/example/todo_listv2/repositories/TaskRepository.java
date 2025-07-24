@@ -86,6 +86,63 @@ public class TaskRepository {
         return result;
     }
 
+    public List<Task> getTaskByTagAndUserId(int amount, String userId, List<Tag> tags){
+        List<String> idTags = new ArrayList<>();
+        for(Tag item : tags){
+            idTags.add(item.getId());
+        }
+
+        JSONObject json = new JSONObject();
+        try{
+            json.put("amount", amount);
+            json.put("userId", userId);
+
+            JSONArray tagIdsJson = new JSONArray(idTags);
+            json.put("tagIds", tagIdsJson);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        RequestBody body = RequestBody.create(json.toString(), MediaType.parse("application/json"));
+        Request request = new Request.Builder()
+                .url(baseURL + "/task/getDayTaskLimited")
+                .post(body)
+                .build();
+
+        List<Task> result = new ArrayList<>();
+        try {
+            Response response = client.newCall(request).execute();
+            if (response.isSuccessful()) {
+                String resStr = response.body().string();
+                JSONArray resJSON = new JSONArray(resStr);
+                for (int i = 0; i < resJSON.length(); i++) {
+                    JSONObject objects = resJSON.getJSONObject(i);
+                    Task item = new Task(
+                            objects.getString("id"),
+                            objects.getString("title"),
+                            objects.getString("description"),
+                            objects.getString("note"),
+                            objects.getLong("startTime"),
+                            objects.getLong("endTime"),
+                            objects.getLong("remindAt"),
+                            objects.getBoolean("isCompleted"),
+                            objects.getLong("completedAt"),
+                            objects.getLong("createAt"),
+                            objects.getString("priorityId"),
+                            objects.getString("tagId"),
+                            objects.getBoolean("isProgressTask"),
+                            objects.getDouble("successRate"),
+                            objects.getString("userId")
+                    );
+                    result.add(item);
+                }
+            }
+        } catch (IOException | JSONException e){
+            e.printStackTrace();
+        }
+        return result;
+    }
+
     public Task getTaskById(String taskId){
         Request request = new Request.Builder()
                 .url(baseURL + "/task/" + taskId)

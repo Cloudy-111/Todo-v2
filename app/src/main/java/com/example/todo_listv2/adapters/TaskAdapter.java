@@ -12,9 +12,13 @@ import com.example.todo_listv2.R;
 import com.example.todo_listv2.models.Priority;
 import com.example.todo_listv2.models.PriorityHeaderItem;
 import com.example.todo_listv2.models.Tag;
+import com.example.todo_listv2.models.TagHeaderItem;
 import com.example.todo_listv2.models.Task;
+import com.example.todo_listv2.models.TaskCommon;
 import com.example.todo_listv2.models.TaskItemWrapper;
 import com.example.todo_listv2.viewHolders.HeaderViewHolder;
+import com.example.todo_listv2.viewHolders.TagHeaderViewHolder;
+import com.example.todo_listv2.viewHolders.TaskCommonViewHolder;
 import com.example.todo_listv2.viewHolders.TaskProgressViewHolder;
 import com.example.todo_listv2.viewHolders.TaskViewHolder;
 
@@ -24,20 +28,25 @@ import java.util.List;
 import java.util.Map;
 
 public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    public static final int MODE_TODAY_TASK = 1;
+    public static final int MODE_ALL_TASK = 2;
     private static final int HEADER_TYPE = 0;
     private static final int TASK_TYPE = 1;
     private static final int TASK_PROGRESS_TYPE = 2;
+    private static final int TAG_HEADER_TYPE = 10;
+    private static final int TASK_COMMON_TYPE = 3;
     private List<ListItemTask> listItemTasks;
     private Map<String, Tag> mapTag;
     private OnClickTaskItem itemListener;
+    private int modeDisplayTask;
 
     public interface OnClickTaskItem{
         void onTaskItemClicked(String taskId);
     }
 
-    public TaskAdapter(List<ListItemTask> listItemTasks, List<Tag> listTag, OnClickTaskItem listener){
+    public TaskAdapter(List<ListItemTask> listItemTasks, List<Tag> listTag, int modeDisplayTask, OnClickTaskItem listener){
         this.listItemTasks = listItemTasks;
-
+        this.modeDisplayTask = modeDisplayTask;
         mapTag = new HashMap<>();
         if (listTag != null) {
             for (Tag tag : listTag) {
@@ -56,39 +65,55 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         } else if(viewType == TASK_TYPE){
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_task_main, parent, false);
             return new TaskViewHolder(view);
-        } else {
+        } else if(viewType == TASK_PROGRESS_TYPE){
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_task_progress, parent, false);
             return new TaskProgressViewHolder(view);
+        } else if(viewType == TAG_HEADER_TYPE){
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_tag_header, parent, false);
+            return new TagHeaderViewHolder((view));
+        } else {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_task_common, parent, false);
+            return new TaskCommonViewHolder(view);
         }
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position){
         ListItemTask item = listItemTasks.get(position);
+        int viewType = holder.getItemViewType();
 
-        Log.d("itemListSize", "Size: " + listItemTasks.size());
-        if(item.getItemType() == HEADER_TYPE){
+        if(viewType == HEADER_TYPE){
             ((HeaderViewHolder) holder).bind((PriorityHeaderItem) item);
-            Log.d("Bind", "Binding item at pos " + position + ": type=" + item.getItemType());
-        } else if(item.getItemType() == TASK_TYPE){
+        } else if(viewType == TASK_TYPE){
             ((TaskViewHolder) holder).bind((TaskItemWrapper) item, mapTag);
-            Log.d("Bind", "Binding item at pos " + position + ": title=" + ((TaskItemWrapper) item).getTask().getTitle());
-        } else {
+        } else if(viewType == TASK_PROGRESS_TYPE){
             ((TaskProgressViewHolder) holder).bind((TaskItemWrapper) item, mapTag);
+        } else if(viewType == TAG_HEADER_TYPE){
+            ((TagHeaderViewHolder) holder).bind((TagHeaderItem) item);
+        } else if(viewType == TASK_COMMON_TYPE){
+            ((TaskCommonViewHolder) holder).bind((TaskItemWrapper) item);
         }
 
-        if(item.getItemType() != HEADER_TYPE){
+        if(viewType != HEADER_TYPE && viewType != TAG_HEADER_TYPE){
             holder.itemView.setOnClickListener(v -> {
                 String taskId = ((TaskItemWrapper) item).getTask().getId();
                 itemListener.onTaskItemClicked(taskId);
             });
         }
-
     }
 
     @Override
     public int getItemViewType(int position){
-        return listItemTasks.get(position).getItemType();
+        ListItemTask item = listItemTasks.get(position);
+
+        if (item instanceof TaskItemWrapper) {
+            if (modeDisplayTask == MODE_ALL_TASK) {
+                return TASK_COMMON_TYPE;
+            } else {
+                return item.getItemType(); // 1 hoặc 2
+            }
+        }
+        return item.getItemType();
     }
 
     @Override
