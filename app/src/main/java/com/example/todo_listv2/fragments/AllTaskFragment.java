@@ -63,18 +63,15 @@ public class AllTaskFragment extends Fragment {
 
     public void setRecyclerTaskView(){
         taskAdapter = new TaskAdapter(new ArrayList<>(), new ArrayList<>(), TaskAdapter.MODE_ALL_TASK, taskId -> {
-//            DetailTaskFragment fragment = new DetailTaskFragment();
-//
-//            //Reload Data
-//            fragment.setOnTaskUpdatedListener(() -> {
-//                taskDayViewModel.loadData(DateTimeUtils.getTodayDate(), user_id);
-//            });
-//
-//            Bundle args = new Bundle();
-//            args.putString("taskId", taskId);
-//            fragment.setArguments(args);
-//
-//            fragment.show(requireActivity().getSupportFragmentManager(), "FullScreenDialog");
+
+        }, tagId -> {
+            DetailTagFragment fragment = new DetailTagFragment();
+
+            Bundle args = new Bundle();
+            args.putString("tagId", tagId);
+            fragment.setArguments(args);
+
+            fragment.show(requireActivity().getSupportFragmentManager(), "FullScreenDialog");
         });
         binding.recyclerViewTask.setLayoutManager(new LinearLayoutManager(getActivity()));
         binding.recyclerViewTask.setAdapter(taskAdapter);

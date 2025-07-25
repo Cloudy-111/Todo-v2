@@ -38,13 +38,18 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private List<ListItemTask> listItemTasks;
     private Map<String, Tag> mapTag;
     private OnClickTaskItem itemListener;
+    private OnClickTagHeader tagHeaderListener;
     private int modeDisplayTask;
 
     public interface OnClickTaskItem{
         void onTaskItemClicked(String taskId);
     }
 
-    public TaskAdapter(List<ListItemTask> listItemTasks, List<Tag> listTag, int modeDisplayTask, OnClickTaskItem listener){
+    public interface OnClickTagHeader{
+        void onTagHeaderClicked(String tagId);
+    }
+
+    public TaskAdapter(List<ListItemTask> listItemTasks, List<Tag> listTag, int modeDisplayTask, OnClickTaskItem listener, OnClickTagHeader tagHeaderListener){
         this.listItemTasks = listItemTasks;
         this.modeDisplayTask = modeDisplayTask;
         mapTag = new HashMap<>();
@@ -54,6 +59,7 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             }
         }
 
+        this.tagHeaderListener = tagHeaderListener;
         this.itemListener = listener;
     }
 
@@ -98,6 +104,13 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             holder.itemView.setOnClickListener(v -> {
                 String taskId = ((TaskItemWrapper) item).getTask().getId();
                 itemListener.onTaskItemClicked(taskId);
+            });
+        }
+
+        if(viewType == TAG_HEADER_TYPE){
+            holder.itemView.setOnClickListener(v -> {
+                String tagId = ((TagHeaderItem) item).getTag().getId();
+                tagHeaderListener.onTagHeaderClicked(tagId);
             });
         }
     }

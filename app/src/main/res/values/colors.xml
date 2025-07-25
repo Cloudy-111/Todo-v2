@@ -20,4 +20,8 @@
     <color name="low_priority">#9511DD</color>
 
     <color name="background_secondary">#FFF4E5</color>
+
+    <color name="purple">#7215FF</color>
+    <color name="light_green">#83FF8B</color>
+    <color name="light_cyan">#86F5FF</color>
 </resources>

@@ -107,6 +107,8 @@ public class TodayFragment extends Fragment implements WeekDayAdapter.OnItemList
             fragment.setArguments(args);
 
             fragment.show(requireActivity().getSupportFragmentManager(), "FullScreenDialog");
+        }, tagId -> {
+
         });
         binding.recyclerViewTask.setLayoutManager(new LinearLayoutManager(getActivity()));
         binding.recyclerViewTask.setAdapter(taskAdapter);
