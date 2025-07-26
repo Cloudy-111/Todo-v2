@@ -55,4 +55,22 @@ public class TagDetailViewModel extends ViewModel {
         }
         return result;
     }
+
+    public void saveEditTag(Tag tag){
+        tagRepository.saveEditTag(tag, new TagRepository.TagCallback() {
+            @Override
+            public void onSuccess(String message, Tag updatedTag) {
+                _tag.postValue(updatedTag);
+                Map<String, Tag> map = _tagMap.getValue();
+                if (map == null) map = new HashMap<>();
+                map.put(updatedTag.getId(), updatedTag);
+                _tagMap.postValue(map);
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+
+            }
+        });
+    }
 }

@@ -3,13 +3,14 @@ package com.example.todo_listv2.viewHolders;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.todo_listv2.R;
-import com.example.todo_listv2.Utils.ChangeColorUtils;
+import com.example.todo_listv2.Utils.ColorUtils;
 import com.example.todo_listv2.Utils.DateTimeUtils;
 import com.example.todo_listv2.Utils.TextUtils;
 import com.example.todo_listv2.models.Tag;
@@ -48,10 +49,11 @@ public class TaskViewHolder extends RecyclerView.ViewHolder {
                     ((GradientDrawable) background).setColor(color);
                 }
             } catch (IllegalArgumentException e){
-                ChangeColorUtils.fallbackGray(colorBar);
+                ColorUtils.fallbackGray(colorBar);
             }
         } else {
-            ChangeColorUtils.fallbackError(colorBar);
+            Log.e("Color Tasks Error", "ERROR COLOR TASK");
+            ColorUtils.fallbackError(colorBar);
         }
     }
 }

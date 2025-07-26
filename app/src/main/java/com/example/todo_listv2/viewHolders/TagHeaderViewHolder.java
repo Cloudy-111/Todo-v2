@@ -2,16 +2,13 @@ package com.example.todo_listv2.viewHolders;
 
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.todo_listv2.R;
-import com.example.todo_listv2.Utils.ChangeColorUtils;
+import com.example.todo_listv2.Utils.ColorUtils;
 import com.example.todo_listv2.Utils.TextUtils;
 import com.example.todo_listv2.models.Tag;
 import com.example.todo_listv2.models.TagHeaderItem;
@@ -37,7 +34,7 @@ public class TagHeaderViewHolder extends RecyclerView.ViewHolder {
             tagColorView.setBackgroundTintList(ColorStateList.valueOf(color));
             tagName.setText(TextUtils.ellipsize(tag.getName(), MAX_LENGTH_TITLE));
         } else {
-            ChangeColorUtils.fallbackError(tagColorView);
+            ColorUtils.fallbackError(tagColorView);
         }
 
     }

@@ -1,18 +1,13 @@
 package com.example.todo_listv2.viewHolders;
 
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
 import android.view.View;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.todo_listv2.R;
-import com.example.todo_listv2.Utils.ChangeColorUtils;
 import com.example.todo_listv2.Utils.DateTimeUtils;
 import com.example.todo_listv2.models.Task;
-import com.example.todo_listv2.models.TaskCommon;
 import com.example.todo_listv2.models.TaskItemWrapper;
 
 public class TaskCommonViewHolder extends RecyclerView.ViewHolder {

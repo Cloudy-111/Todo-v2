@@ -1,5 +1,6 @@
 package com.example.todo_listv2.fragments;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
@@ -8,6 +9,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -22,8 +24,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.todo_listv2.R;
+import com.example.todo_listv2.Utils.ColorUtils;
 import com.example.todo_listv2.adapters.TaskAdapter;
 import com.example.todo_listv2.databinding.FragmentDetailTagBinding;
+import com.example.todo_listv2.models.Tag;
+import com.example.todo_listv2.repositories.TagRepository;
 import com.example.todo_listv2.viewModels.TagDetailViewModel;
 
 import java.util.ArrayList;
@@ -34,12 +39,14 @@ public class DetailTagFragment extends DialogFragment {
     private String taskId, tagId, userId;
     private ImageButton backButton, editButton, filterButton;
     private View allTaskButton, overdueTaskButton, completedTaskButton, willDoTaskButton;
+    private View tagColorViewDialog;
     private View tagColorView;
     private TextView tagName;
     private EditText searchText;
     private RecyclerView listTaskRecycler;
     private TagDetailViewModel tagDetailViewModel;
     private TaskAdapter taskAdapter;
+    private int selectedColorValue = Color.parseColor("#FF7676");
 
     @Nullable
     @Override
@@ -133,7 +140,7 @@ public class DetailTagFragment extends DialogFragment {
         });
 
         editButton.setOnClickListener(v -> {
-
+            showTagEditDialog();
         });
 
         filterButton.setOnClickListener(v -> {
@@ -155,6 +162,43 @@ public class DetailTagFragment extends DialogFragment {
         willDoTaskButton.setOnClickListener(v -> {
 
         });
+    }
+
+    private void showTagEditDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_edit_tag, null);
+        builder.setView(dialogView);
+
+        EditText editTagName = dialogView.findViewById(R.id.edit_tag_name);
+        tagColorViewDialog = dialogView.findViewById(R.id.selected_color_preview);
+        Button saveButton = dialogView.findViewById(R.id.save_button);
+
+        AlertDialog dialog = builder.create();
+
+        tagColorViewDialog.setOnClickListener(v -> pickCustomColor());
+
+        saveButton.setOnClickListener(v -> {
+            String tagColor = String.format("#%06X", (0xFFFFFF & selectedColorValue));
+            String tagNameText = String.valueOf(editTagName.getText());
+            Tag editedTag = new Tag(tagId, userId, tagColor, tagNameText);
+            tagDetailViewModel.saveEditTag(editedTag);
+            dialog.dismiss();
+        });
+
+        dialog.show();
+    }
+
+    private void pickCustomColor(){
+        ColorUtils.showColorPicker(
+            getContext(),
+            selectedColorValue,
+            color -> {
+                selectedColorValue = color;
+                if (tagColorViewDialog != null) {
+                    tagColorViewDialog.setBackgroundTintList(ColorStateList.valueOf(color));
+                }
+            }
+        );
     }
 
 }

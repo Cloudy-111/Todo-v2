@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.todo_listv2.R;
+import com.example.todo_listv2.Utils.ColorUtils;
 import com.example.todo_listv2.Utils.DateTimeUtils;
 import com.example.todo_listv2.adapters.PriorityAdapter;
 import com.example.todo_listv2.adapters.TagAdapter;
@@ -319,28 +320,16 @@ public class AddTaskActivity extends AppCompatActivity {
     }
 
     private void pickCustomColor(){
-        ContextThemeWrapper themedContext = new ContextThemeWrapper(this, R.style.CustomColorPickerDialog);
-        ColorPickerDialogBuilder
-                .with(themedContext)
-                .setTitle("Pick a Color")
-                .initialColor(selectedColorValue)
-                .wheelType(ColorPickerView.WHEEL_TYPE.FLOWER)
-                .density(12)
-                .setOnColorSelectedListener(color -> {
-
-                })
-                .setPositiveButton("Chọn", (colorDialog, color, allColors) -> {
-                    selectedColorValue = color;
-                    if (selectColorPreview != null) {
-                        selectColorPreview.setBackgroundTintList(ColorStateList.valueOf(color));
-                    }
-                    Toast.makeText(this, "Đã chọn màu", Toast.LENGTH_SHORT).show();
-                })
-                .setNegativeButton("Hủy", (colorDialog, which) -> {
-                    // Do nothing
-                })
-                .build()
-                .show();
+        ColorUtils.showColorPicker(
+            this,
+            selectedColorValue,
+            color -> {
+                selectedColorValue = color;
+                if (selectColorPreview != null) {
+                    selectColorPreview.setBackgroundTintList(ColorStateList.valueOf(color));
+                }
+            }
+        );
     }
 
     private void saveNewTask(Task newTask){

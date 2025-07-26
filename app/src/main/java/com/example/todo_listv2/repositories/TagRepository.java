@@ -64,7 +64,6 @@ public class TagRepository {
     }
 
     public void saveNewTag(Tag newTag, TagCallback callback){
-
         Gson gson = new Gson();
         String json;
         try {
@@ -147,5 +146,59 @@ public class TagRepository {
             e.printStackTrace();
         }
         return result;
+    }
+
+    public void saveEditTag(Tag editedTag, TagCallback callback){
+        Gson gson = new Gson();
+        String json;
+        try {
+            json = gson.toJson(editedTag);
+        } catch (Exception e){
+            e.printStackTrace();
+            callback.onError("Error Create JSON");
+            return;
+        }
+
+        RequestBody body = RequestBody.create(json, MediaType.parse("application/json"));
+        Request request = new Request.Builder()
+                .url(baseURL + "/tag/edit")
+                .post(body)
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                callback.onError("Can't connect to server");
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (response.isSuccessful() && response.body() != null) {
+                    try {
+                        String resStr = response.body().string();
+
+                        JSONObject resJSON = new JSONObject(resStr);
+                        boolean success = resJSON.getBoolean("success");
+                        if (success){
+                            JSONObject data = resJSON.getJSONObject("data");
+                            String id = data.getString("id");
+                            String name = data.getString("name");
+                            String color = data.getString("color");
+                            String userId = data.getString("userId");
+
+                            Tag newTag = new Tag(id, userId, color, name);
+                            String message = resJSON.getString("message");
+                            callback.onSuccess(message + " " + id, newTag);
+                        } else {
+                            callback.onError(resJSON.getString("message"));
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        callback.onError("Error Response: " + e.getMessage());
+                    }
+                } else {
+                    callback.onError("Error Server: " + response.code());
+                }
+            }
+        });
     }
 }
