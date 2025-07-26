@@ -15,4 +15,9 @@ public class TagHeaderItem implements ListItemTask {
     public int getItemType(){
         return 10;
     }
+
+    @Override
+    public String getStableId(){
+        return "tag_header_" + tag.getId();
+    }
 }

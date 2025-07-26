@@ -15,4 +15,9 @@ public class TaskItemWrapper implements ListItemTask {
     public int getItemType(){
         return task.isProgressTask() ? 2 : 1;
     }
+
+    @Override
+    public String getStableId(){
+        return "task_" + task.getId();
+    }
 }

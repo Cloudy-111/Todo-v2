@@ -1,6 +1,9 @@
 package com.example.todo_listv2.viewModels;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -11,7 +14,9 @@ import com.example.todo_listv2.models.TaskItemWrapper;
 import com.example.todo_listv2.repositories.TagRepository;
 import com.example.todo_listv2.repositories.TaskRepository;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +25,12 @@ import java.util.concurrent.Executors;
 
 
 public class TagDetailViewModel extends ViewModel {
+    public enum FilterType {
+        ALL,
+        OVERDUE,
+        COMPLETED,
+        WILL_DO
+    }
     private final TaskRepository taskRepository = new TaskRepository();
     private final TagRepository tagRepository = new TagRepository();
 
@@ -32,7 +43,22 @@ public class TagDetailViewModel extends ViewModel {
     private final MutableLiveData<Map<String, Tag>> _tagMap = new MutableLiveData<>();
     public LiveData<Map<String, Tag>> tagMap = _tagMap;
 
+    private final MutableLiveData<FilterType> _filter = new MutableLiveData<>(FilterType.ALL);
+    public LiveData<FilterType> filter = _filter;
+
+    private final MediatorLiveData<List<ListItemTask>> _visibleItems = new MediatorLiveData<>();
+    public LiveData<List<ListItemTask>> visibleItems = _visibleItems;
+
     private ExecutorService executor = Executors.newSingleThreadExecutor();
+
+    public TagDetailViewModel(){
+        _visibleItems.addSource(_listItemTasks, tasks -> reloadVisible(tasks, _filter.getValue()));
+        _visibleItems.addSource(_filter, f -> reloadVisible(_listItemTasks.getValue(), f));
+    }
+
+    public void setFilter(FilterType filter){
+        _filter.setValue(filter);
+    }
 
     public void loadData(String tagId, String userId){
         executor.execute(() -> {
@@ -72,5 +98,33 @@ public class TagDetailViewModel extends ViewModel {
 
             }
         });
+    }
+
+    public void reloadVisible(List<ListItemTask> listItemTasks, FilterType filterType){
+        if(listItemTasks == null || listItemTasks.isEmpty()){
+            _visibleItems.setValue(Collections.emptyList());
+            return;
+        }
+        if(filterType == null || filterType == FilterType.ALL){
+            _visibleItems.setValue(listItemTasks);
+            return;
+        }
+
+        List<ListItemTask> filtered = new ArrayList<>();
+        long timeNow = System.currentTimeMillis();
+        for(ListItemTask item : listItemTasks){
+            if(item instanceof TaskItemWrapper){
+                Task task = ((TaskItemWrapper) item).getTask();
+                if(filterType == FilterType.OVERDUE){
+                    if(!task.isCompleted() && task.getEndTime() < timeNow) filtered.add(item);
+                } else if(filterType == FilterType.COMPLETED){
+                    if(task.isCompleted()) filtered.add(item);
+                } else if(filterType == FilterType.WILL_DO){
+                    if(!task.isCompleted() && task.getStartTime() > timeNow) filtered.add(item);
+                }
+            }
+        }
+        _visibleItems.setValue(filtered);
+
     }
 }

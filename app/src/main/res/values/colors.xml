@@ -21,7 +21,13 @@
 
     <color name="background_secondary">#FFF4E5</color>
 
-    <color name="purple">#7215FF</color>
+    <color name="light_primary">#FFAAAA</color>
+    <color name="purple">#6500FF</color>
+    <color name="light_purple">#944EFF</color>
+
+    <color name="green">#00FF40</color>
     <color name="light_green">#83FF8B</color>
+
+    <color name="cyan">#00F7FF</color>
     <color name="light_cyan">#86F5FF</color>
 </resources>

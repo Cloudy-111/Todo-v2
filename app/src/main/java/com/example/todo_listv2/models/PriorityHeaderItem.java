@@ -15,4 +15,9 @@ public class PriorityHeaderItem implements ListItemTask {
     public int getItemType(){
         return 0;
     }
+
+    @Override
+    public String getStableId(){
+        return "priority_header_" + priority.getId();
+    }
 }

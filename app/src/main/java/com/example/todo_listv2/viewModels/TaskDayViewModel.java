@@ -87,14 +87,12 @@ public class TaskDayViewModel extends ViewModel {
             List<Tag> tags = tagRepository.getAllTagByUserId(userId);
             List<Task> tasks = taskRepository.getTaskByTagAndUserId(5, userId, tags);
 
-            // Tạo map từ tagId -> Tag để truyền vào adapter
             Map<String, Tag> tagMap = new HashMap<>();
             for (Tag tag : tags) {
                 tagMap.put(tag.getId(), tag);
             }
             _tagMap.postValue(tagMap);
 
-            // Tạo danh sách hiển thị cho adapter (listItemTasks)
             List<ListItemTask> result = buildItemListByTag(tasks, tags);
             _listItemTasks.postValue(result);
         });

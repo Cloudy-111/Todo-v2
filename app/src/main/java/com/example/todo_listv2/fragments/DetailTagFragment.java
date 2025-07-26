@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModel;
@@ -52,6 +54,7 @@ public class DetailTagFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         binding = FragmentDetailTagBinding.inflate(inflater, container, false);
+        setStyle(STYLE_NORMAL, R.style.FullScreenDialog);
         return binding.getRoot();
     }
 
@@ -59,14 +62,14 @@ public class DetailTagFragment extends DialogFragment {
     @Override
     public void onViewCreated(@NonNull View view, @NonNull Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
-        setStyle(STYLE_NORMAL, R.style.FullScreenDialog);
 
         preferences = getActivity().getSharedPreferences("MyAppPrefs", getContext().MODE_PRIVATE);
         userId = preferences.getString("user_id", "1");
-        tagDetailViewModel = new ViewModelProvider(this).get(TagDetailViewModel.class);
+        tagDetailViewModel = new ViewModelProvider(getActivity()).get(TagDetailViewModel.class);
         tagId = getArguments() != null ? getArguments().getString("tagId") : null;
 
         initViews();
+        updateButtonUI(allTaskButton);
 
         observeData();
         setUpRecycler();
@@ -116,7 +119,7 @@ public class DetailTagFragment extends DialogFragment {
             }
         });
 
-        tagDetailViewModel.listItemTask.observe(getViewLifecycleOwner(), tasks -> {
+        tagDetailViewModel.visibleItems.observe(getViewLifecycleOwner(), tasks -> {
             taskAdapter.setTasks(tasks);
         });
     }
@@ -148,19 +151,23 @@ public class DetailTagFragment extends DialogFragment {
         });
 
         allTaskButton.setOnClickListener(v -> {
-
+            tagDetailViewModel.setFilter(TagDetailViewModel.FilterType.ALL);
+            updateButtonUI(allTaskButton);
         });
 
         overdueTaskButton.setOnClickListener(v -> {
-
+            tagDetailViewModel.setFilter(TagDetailViewModel.FilterType.OVERDUE);
+            updateButtonUI(overdueTaskButton);
         });
 
         completedTaskButton.setOnClickListener(v -> {
-
+            tagDetailViewModel.setFilter(TagDetailViewModel.FilterType.COMPLETED);
+            updateButtonUI(completedTaskButton);
         });
 
         willDoTaskButton.setOnClickListener(v -> {
-
+            tagDetailViewModel.setFilter(TagDetailViewModel.FilterType.WILL_DO);
+            updateButtonUI(willDoTaskButton);
         });
     }
 
@@ -201,4 +208,32 @@ public class DetailTagFragment extends DialogFragment {
         );
     }
 
+    private void updateButtonUI(View selectedButton){
+        int selectedColorAllTaskButton = ContextCompat.getColor(requireContext(), R.color.purple);
+        int unSelectedColorAllTaskButton = ContextCompat.getColor(requireContext(), R.color.light_purple);
+
+        int selectedColorOverdueButton = ContextCompat.getColor(requireContext(), R.color.green);
+        int unSelectedColorOverdueButton = ContextCompat.getColor(requireContext(), R.color.light_green);
+
+        int selectedColorCompletedTaskButton = ContextCompat.getColor(requireContext(), R.color.primary);
+        int unSelectedColorCompletedTaskButton = ContextCompat.getColor(requireContext(), R.color.light_primary);
+
+        int selectedColorWillDoButton = ContextCompat.getColor(requireContext(), R.color.cyan);
+        int unSelectedColorWillDoButton = ContextCompat.getColor(requireContext(), R.color.light_cyan);
+
+        allTaskButton.setBackgroundTintList(ColorStateList.valueOf(unSelectedColorAllTaskButton));
+        overdueTaskButton.setBackgroundTintList(ColorStateList.valueOf(unSelectedColorOverdueButton));
+        completedTaskButton.setBackgroundTintList(ColorStateList.valueOf(unSelectedColorCompletedTaskButton));
+        willDoTaskButton.setBackgroundTintList(ColorStateList.valueOf(unSelectedColorWillDoButton));
+
+        if (selectedButton.equals(allTaskButton)) {
+            selectedButton.setBackgroundTintList(ColorStateList.valueOf(selectedColorAllTaskButton));
+        } else if (selectedButton.equals(overdueTaskButton)) {
+            selectedButton.setBackgroundTintList(ColorStateList.valueOf(selectedColorOverdueButton));
+        } else if (selectedButton.equals(completedTaskButton)) {
+            selectedButton.setBackgroundTintList(ColorStateList.valueOf(selectedColorCompletedTaskButton));
+        } else if (selectedButton.equals(willDoTaskButton)) {
+            selectedButton.setBackgroundTintList(ColorStateList.valueOf(selectedColorWillDoButton));
+        }
+    }
 }

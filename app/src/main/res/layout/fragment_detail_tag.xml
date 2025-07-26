@@ -112,7 +112,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/background_circle_1"
-                android:backgroundTint="@color/purple"
+                android:backgroundTint="@color/light_purple"
                 android:paddingHorizontal="8dp"
                 android:layout_marginRight="5dp">
                 <TextView
@@ -127,7 +127,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/background_circle_1"
-                android:backgroundTint="@color/primary"
+                android:backgroundTint="@color/light_primary"
                 android:paddingHorizontal="8dp"
                 android:layout_marginRight="5dp">
                 <TextView

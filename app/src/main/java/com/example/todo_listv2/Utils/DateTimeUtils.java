@@ -27,11 +27,11 @@ public class DateTimeUtils {
         return sdf.format(new Date(millis));
     }
 
-    public static long convertDateStringToMillis(String dateString){
+    public static long convertDateStringToMillis(String dateString, boolean isEndTime){
         try{
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault());
             Date date = sdf.parse(dateString);
-            return date.getTime();
+            return isEndTime ? date.getTime() + 86_400_400L - 1 : date.getTime();
         } catch (ParseException e){
             e.printStackTrace();
             return -1;

@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.todo_listv2.R;
@@ -14,7 +15,6 @@ import com.example.todo_listv2.models.PriorityHeaderItem;
 import com.example.todo_listv2.models.Tag;
 import com.example.todo_listv2.models.TagHeaderItem;
 import com.example.todo_listv2.models.Task;
-import com.example.todo_listv2.models.TaskCommon;
 import com.example.todo_listv2.models.TaskItemWrapper;
 import com.example.todo_listv2.viewHolders.HeaderViewHolder;
 import com.example.todo_listv2.viewHolders.TagHeaderViewHolder;
@@ -23,6 +23,7 @@ import com.example.todo_listv2.viewHolders.TaskProgressViewHolder;
 import com.example.todo_listv2.viewHolders.TaskViewHolder;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -140,7 +141,11 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     public void setTasks(List<ListItemTask> tasks){
-        this.listItemTasks = tasks != null ? tasks : new ArrayList<>();
-        notifyDataSetChanged();
+        List<ListItemTask> old = this.listItemTasks != null ? this.listItemTasks : Collections.emptyList();
+        List<ListItemTask> newList = tasks != null ? tasks : new ArrayList<>();
+
+        DiffUtil.DiffResult diff = DiffUtil.calculateDiff(new TaskDiffCallback(old, newList));
+        this.listItemTasks = newList;
+        diff.dispatchUpdatesTo(this);
     }
 }
