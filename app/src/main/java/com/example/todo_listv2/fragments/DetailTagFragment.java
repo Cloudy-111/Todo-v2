@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -39,7 +41,7 @@ public class DetailTagFragment extends DialogFragment {
     private FragmentDetailTagBinding binding;
     private SharedPreferences preferences;
     private String taskId, tagId, userId;
-    private ImageButton backButton, editButton, filterButton;
+    private ImageButton backButton, editButton, sortButton;
     private View allTaskButton, overdueTaskButton, completedTaskButton, willDoTaskButton;
     private View tagColorViewDialog;
     private View tagColorView;
@@ -49,6 +51,7 @@ public class DetailTagFragment extends DialogFragment {
     private TagDetailViewModel tagDetailViewModel;
     private TaskAdapter taskAdapter;
     private int selectedColorValue = Color.parseColor("#FF7676");
+    private TextView sortByPriority, sortByStartDate, sortByClosest, sortByIsCompleted;
 
     @Nullable
     @Override
@@ -97,7 +100,7 @@ public class DetailTagFragment extends DialogFragment {
     private void initViews(){
         backButton = binding.backButton;
         editButton = binding.editButton;
-        filterButton = binding.filterButton;
+        sortButton = binding.sortButton;
 
         allTaskButton = binding.allTaskFilter;
         overdueTaskButton = binding.overdueTaskFilter;
@@ -146,8 +149,8 @@ public class DetailTagFragment extends DialogFragment {
             showTagEditDialog();
         });
 
-        filterButton.setOnClickListener(v -> {
-
+        sortButton.setOnClickListener(v -> {
+            showTaskSortDialog();
         });
 
         allTaskButton.setOnClickListener(v -> {
@@ -169,6 +172,31 @@ public class DetailTagFragment extends DialogFragment {
             tagDetailViewModel.setFilter(TagDetailViewModel.FilterType.WILL_DO);
             updateButtonUI(willDoTaskButton);
         });
+    }
+
+    private void showTaskSortDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_select_sort_type, null);
+        builder.setView(dialogView);
+
+        AlertDialog dialog = builder.create();
+
+        sortByPriority = dialogView.findViewById(R.id.priority_sort);
+        sortByClosest = dialogView.findViewById(R.id.date_closest_sort);
+        sortByIsCompleted = dialogView.findViewById(R.id.status_sort);
+        sortByStartDate = dialogView.findViewById(R.id.start_date_sort);
+
+        sortByPriority.setOnClickListener(v -> sortTask(TagDetailViewModel.SortType.PRIORITY, dialog));
+        sortByClosest.setOnClickListener(v -> sortTask(TagDetailViewModel.SortType.CLOSEST, dialog));
+        sortByIsCompleted.setOnClickListener(v -> sortTask(TagDetailViewModel.SortType.IS_COMPLETED, dialog));
+        sortByStartDate.setOnClickListener(v -> sortTask(TagDetailViewModel.SortType.START_DATE, dialog));
+
+        dialog.show();
+    }
+
+    private void sortTask(TagDetailViewModel.SortType sortType, AlertDialog dialog){
+        tagDetailViewModel.setSortType(sortType);
+        dialog.dismiss();
     }
 
     private void showTagEditDialog(){

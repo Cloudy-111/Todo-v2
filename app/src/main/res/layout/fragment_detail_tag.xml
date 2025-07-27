@@ -94,7 +94,7 @@
                 </LinearLayout>
 
                 <ImageButton
-                    android:id="@+id/filter_button"
+                    android:id="@+id/sort_button"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:src="@drawable/filter_icon"
