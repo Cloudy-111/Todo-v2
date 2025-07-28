@@ -25,4 +25,12 @@
         <item name="android:windowBackground">@android:color/white</item>
         <item name="android:backgroundDimEnabled">true</item>
     </style>
+
+    <style name="WrapScreenDialog" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:windowMinWidthMajor">100%</item>
+    </style>
 </resources>

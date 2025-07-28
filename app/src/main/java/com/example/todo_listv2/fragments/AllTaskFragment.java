@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,7 +25,7 @@ public class AllTaskFragment extends Fragment {
     private FragmentAlltaskBinding binding;
     private SharedPreferences preferences;
     private TaskDayViewModel taskDayViewModel;
-    private EditText searchGlobal;
+    private TextView searchGlobal;
     private TaskAdapter taskAdapter;
     private String user_id;
     public AllTaskFragment(){}
@@ -47,6 +48,10 @@ public class AllTaskFragment extends Fragment {
 
         observerData();
         setRecyclerTaskView();
+
+        searchGlobal.setOnClickListener(v -> {
+            new SearchSuggestFragment().show(requireActivity().getSupportFragmentManager(), "WrapScreenDialog");
+        });
 
         taskDayViewModel.loadDataByTag(user_id);
     }

@@ -54,6 +54,13 @@
                 android:layout_weight="1"/>
 
             <ImageButton
+                android:id="@+id/sort_button"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/filter_icon"
+                android:background="@color/white"/>
+
+            <ImageButton
                 android:id="@+id/edit_button"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
@@ -62,45 +69,6 @@
         </LinearLayout>
 
         <include layout="@layout/divider_slash"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical">
-            <LinearLayout
-                android:id="@+id/frameLayout_search"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/background_circle"
-                    android:padding="5dp"
-                    android:layout_weight="1">
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:src="@drawable/magnifer"/>
-                    <EditText
-                        android:id="@+id/search_global"
-                        android:layout_weight="1"
-                        android:layout_width="match_parent"
-                        android:layout_height="20dp"
-                        android:textSize="16dp"
-                        android:textColor="@color/black"
-                        android:hint="Search Global"
-                        android:textColorHint="@color/tertiary"/>
-                </LinearLayout>
-
-                <ImageButton
-                    android:id="@+id/sort_button"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:src="@drawable/filter_icon"
-                    android:background="@color/white"/>
-            </LinearLayout>
-        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"

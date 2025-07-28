@@ -32,6 +32,9 @@ public class TaskDayViewModel extends ViewModel {
     private final MutableLiveData<List<ListItemTask>> _listItemTasks = new MutableLiveData<>();
     public LiveData<List<ListItemTask>> listItemTasks = _listItemTasks;
 
+    private final MutableLiveData<List<Task>> _listTask = new MutableLiveData<>();
+    public LiveData<List<Task>> listTask = _listTask;
+
     private final MutableLiveData<Map<String, Tag>> _tagMap = new MutableLiveData<>();
     public LiveData<Map<String, Tag>> tagMap = _tagMap;
 
@@ -119,5 +122,12 @@ public class TaskDayViewModel extends ViewModel {
         }
 
         return result;
+    }
+
+    public void loadTaskSuggest(String searchText, String userId){
+        executor.execute(() -> {
+            List<Task> result = taskRepository.searchTask(searchText, userId);
+            _listTask.postValue(result);
+        });
     }
 }

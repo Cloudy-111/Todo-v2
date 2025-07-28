@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:background="@drawable/background_secondary"
+    android:padding="10dp"
+    android:layout_margin="10dp">
+
+    <EditText
+        android:id="@+id/editTextSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Tìm task..."
+        android:background="@drawable/background_circle"
+        android:drawableStart="@drawable/magnifer"
+        android:padding="10dp"
+        android:textColor="@color/black"
+        android:textColorHint="@color/gray_600"
+        android:imeOptions="actionSearch"
+        android:inputType="text" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerSuggestions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:listitem="@layout/item_search_suggest"/>
+
+    <TextView
+        android:id="@+id/textViewEmpty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="No tasks have that Title"
+        android:textSize="16sp"
+        android:textColor="@android:color/darker_gray"
+        android:gravity="center"
+        android:visibility="gone"
+        android:layout_marginTop="16dp"/>
+</LinearLayout>

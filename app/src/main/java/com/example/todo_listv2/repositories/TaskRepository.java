@@ -365,4 +365,53 @@ public class TaskRepository {
         }
         return result;
     }
+
+    public List<Task> searchTask(String query, String userId){
+        JSONObject json = new JSONObject();
+        try{
+            json.put("query", query);
+            json.put("userId", userId);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        RequestBody body = RequestBody.create(json.toString(), MediaType.parse("application/json"));
+        Request request = new Request.Builder()
+                .url(baseURL + "/task/search")
+                .post(body)
+                .build();
+
+        List<Task> result = new ArrayList<>();
+        try {
+            Response response = client.newCall(request).execute();
+            if (response.isSuccessful()) {
+                String resStr = response.body().string();
+                JSONArray resJSON = new JSONArray(resStr);
+                for (int i = 0; i < resJSON.length(); i++) {
+                    JSONObject objects = resJSON.getJSONObject(i);
+                    Task item = new Task(
+                            objects.getString("id"),
+                            objects.getString("title"),
+                            objects.getString("description"),
+                            objects.getString("note"),
+                            objects.getLong("startTime"),
+                            objects.getLong("endTime"),
+                            objects.getLong("remindAt"),
+                            objects.getBoolean("isCompleted"),
+                            objects.getLong("completedAt"),
+                            objects.getLong("createAt"),
+                            objects.getString("priorityId"),
+                            objects.getString("tagId"),
+                            objects.getBoolean("isProgressTask"),
+                            objects.getDouble("successRate"),
+                            objects.getString("userId")
+                    );
+                    result.add(item);
+                }
+            }
+        } catch (IOException | JSONException e){
+            e.printStackTrace();
+        }
+        return result;
+    }
 }
