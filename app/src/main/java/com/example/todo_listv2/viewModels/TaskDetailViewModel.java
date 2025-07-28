@@ -37,6 +37,9 @@ public class TaskDetailViewModel extends ViewModel {
     private final MutableLiveData<List<Checklist>> _checklistItems = new MutableLiveData<List<Checklist>>();
     public LiveData<List<Checklist>> checklistItems = _checklistItems;
 
+    private final MutableLiveData<Boolean> _taskType = new MutableLiveData<>();
+    public LiveData<Boolean> taskType = _taskType;
+
     private ExecutorService executor = Executors.newSingleThreadExecutor();
 
     public void loadData(String taskId){
@@ -44,6 +47,7 @@ public class TaskDetailViewModel extends ViewModel {
             Task task = taskRepository.getTaskById(taskId);
             _task.postValue(task);
             _checklistItems.postValue(checkListRepository.getAllChecklistByTaskId(taskId));
+            _taskType.postValue(task.isProgressTask());
 
             if(task != null){
                 loadTag(task.getTagId());
@@ -71,4 +75,6 @@ public class TaskDetailViewModel extends ViewModel {
     public void updateProgressTask(String taskId, double successRate){
         taskRepository.updateProgressTask(taskId, successRate);
     }
+
+
 }

@@ -50,6 +50,7 @@ public class DetailTaskFragment extends DialogFragment {
     private Map<String, Boolean> initialMapItemStatus = new HashMap<>();
     private Map<String, Boolean> currentMapItemStatus = new HashMap<>();
     private OnTaskUpdatedListener listener;
+    private boolean isProgressTask;
 
     // Use for Reload data when destroy fragment
     public interface OnTaskUpdatedListener{
@@ -123,7 +124,7 @@ public class DetailTaskFragment extends DialogFragment {
             }
         }
 
-        if(!listItemNeedUpdate.isEmpty()){
+        if(!listItemNeedUpdate.isEmpty() && isProgressTask){
             taskDetailViewModel.updateChecklistItem(listItemNeedUpdate, new CheckListRepository.CheckListCallback() {
                 @Override
                 public void onSuccess(String message) {
@@ -145,7 +146,7 @@ public class DetailTaskFragment extends DialogFragment {
                 }
             });
         }
-        if(completedItems == initialMapItemStatus.size()){
+        if(completedItems == initialMapItemStatus.size() && isProgressTask){
             taskDetailViewModel.makeTaskCompleted(taskId, new TaskRepository.TaskCallback() {
                 @Override
                 public void onSuccess(String taskId) {
@@ -221,6 +222,10 @@ public class DetailTaskFragment extends DialogFragment {
                 initialMapItemStatus.put(item.getId(), item.isCompleted());
                 currentMapItemStatus.put(item.getId(), item.isCompleted());
             }
+        });
+
+        taskDetailViewModel.taskType.observe(getViewLifecycleOwner(), taskType -> {
+            isProgressTask = taskType;
         });
     }
 
