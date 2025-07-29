@@ -16,6 +16,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.todo_listv2.R;
 import com.example.todo_listv2.databinding.ActivityMainBinding;
+import com.example.todo_listv2.fragments.CalendarFragment;
 import com.example.todo_listv2.fragments.HomeFragment;
 import com.example.todo_listv2.fragments.ProfileFragment;
 
@@ -43,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
                 replaceFragment(new HomeFragment());
             } else if (id == R.id.profileBtn) {
                 replaceFragment(new ProfileFragment());
+            } else if (id == R.id.calendarBtn){
+                replaceFragment(new CalendarFragment());
             }
             return true;
         });

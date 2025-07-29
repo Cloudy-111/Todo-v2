@@ -38,8 +38,6 @@ import com.example.todo_listv2.repositories.CheckListRepository;
 import com.example.todo_listv2.repositories.TagRepository;
 import com.example.todo_listv2.repositories.TaskRepository;
 import com.example.todo_listv2.viewModels.AddTaskViewModel;
-import com.flask.colorpicker.ColorPickerView;
-import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 
 import java.sql.Date;
 import java.util.ArrayList;

@@ -14,9 +14,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.view.ContextThemeWrapper;
 
 import com.example.todo_listv2.R;
-import com.flask.colorpicker.ColorPickerView;
-import com.flask.colorpicker.builder.ColorPickerClickListener;
-import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
+import com.skydoves.colorpickerview.ColorPickerDialog;
+import com.skydoves.colorpickerview.ColorPickerView;
+import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener;
+import com.skydoves.colorpickerview.sliders.AlphaSlideBar;
+import com.skydoves.colorpickerview.sliders.BrightnessSlideBar;
+import com.skydoves.colorpickerview.ColorEnvelope;
 
 public class ColorUtils {
     public interface OnColorPickedListener {
@@ -39,23 +42,24 @@ public class ColorUtils {
 
     public static void showColorPicker(@NonNull Context context, int initialColorValue, @NonNull OnColorPickedListener listener){
         ContextThemeWrapper themedContext = new ContextThemeWrapper(context, R.style.CustomColorPickerDialog);
-        ColorPickerDialogBuilder
-                .with(themedContext)
-                .setTitle("Pick a Color")
-                .initialColor(initialColorValue)
-                .wheelType(ColorPickerView.WHEEL_TYPE.FLOWER)
-                .density(12)
-                .setOnColorSelectedListener(color -> {
 
+        ColorPickerView colorPickerView = new ColorPickerView(context);
+        colorPickerView.setInitialColor(initialColorValue);
+
+        new ColorPickerDialog.Builder(context)
+                .setTitle("Chọn màu")
+                .setView(colorPickerView)
+                .setPositiveButton("Chọn", new ColorEnvelopeListener() {
+                    @Override
+                    public void onColorSelected(ColorEnvelope envelope, boolean fromUser) {
+                        listener.onPicked(envelope.getColor());
+                        Toast.makeText(context, "Đã chọn màu", Toast.LENGTH_SHORT).show();
+                    }
                 })
-                .setPositiveButton("Chọn", (colorDialog, color, allColors) -> {
-                    listener.onPicked(color);
-                    Toast.makeText(context, "Đã chọn màu", Toast.LENGTH_SHORT).show();
-                })
-                .setNegativeButton("Hủy", (colorDialog, which) -> {
-                    // Do nothing
-                })
-                .build()
+                .setNegativeButton("Hủy", (dialogInterface, i) -> dialogInterface.dismiss())
+                .attachAlphaSlideBar(true)
+                .attachBrightnessSlideBar(true)
+                .setBottomSpace(12)
                 .show();
     }
 }

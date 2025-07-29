@@ -50,9 +50,9 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("androidx.coordinatorlayout:coordinatorlayout:1.3.0")
     implementation("com.github.bumptech.glide:glide:4.16.0")
-    implementation("com.apachat:swipereveallayout-android:1.1.2")
     annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
-    implementation("com.github.QuadFlask:colorpicker:0.0.15")
+//    implementation("com.github.QuadFlask:colorpicker:0.0.15")
+    implementation("com.github.skydoves:colorpickerview:2.2.4")
     implementation("com.google.android.gms:play-services-auth:20.7.0")
     implementation("com.google.code.gson:gson:2.10.1")
 }

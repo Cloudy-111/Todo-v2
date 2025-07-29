@@ -22,7 +22,7 @@
                 android:id="@+id/back_button"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:background="@drawable/arrow_left"
+                android:background="@drawable/arrow_back"
                 android:backgroundTint="@color/black"/>
 
             <LinearLayout
