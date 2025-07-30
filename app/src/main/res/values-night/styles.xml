@@ -47,4 +47,8 @@
     <style name="CalenderViewDateCustomText" parent="">
         <item name="android:textColor">@drawable/text_calendar</item>
     </style>
+
+    <style name="CircleImage" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+        <item name="cornerSize">50%</item>
+    </style>
 </resources>
