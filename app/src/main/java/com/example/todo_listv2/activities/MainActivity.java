@@ -19,6 +19,7 @@ import com.example.todo_listv2.databinding.ActivityMainBinding;
 import com.example.todo_listv2.fragments.CalendarFragment;
 import com.example.todo_listv2.fragments.HomeFragment;
 import com.example.todo_listv2.fragments.ProfileFragment;
+import com.example.todo_listv2.fragments.QuickNoteFragment;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
@@ -46,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
                 replaceFragment(new ProfileFragment());
             } else if (id == R.id.calendarBtn){
                 replaceFragment(new CalendarFragment());
+            } else if(id == R.id.noteBtn){
+                replaceFragment(new QuickNoteFragment());
             }
             return true;
         });
