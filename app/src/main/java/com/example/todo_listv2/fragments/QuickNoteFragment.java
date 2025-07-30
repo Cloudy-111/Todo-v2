@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -52,9 +53,20 @@ public class QuickNoteFragment extends Fragment {
         initViews();
         observeData();
         setupRecycler();
+
         btnSwitchLayout.setOnClickListener(v -> {
             isGridMode = !isGridMode;
             switchLayout();
+        });
+
+        addNoteButton.setOnClickListener(v -> {
+            FragmentTransaction transaction = requireActivity()
+                    .getSupportFragmentManager()
+                    .beginTransaction();
+
+            transaction.replace(R.id.frame_replacement, new AddNoteFragment());
+            transaction.addToBackStack(null);
+            transaction.commit();
         });
 
         notesViewModel.loadNoteList(userId);

@@ -27,4 +27,8 @@ public class NotesViewModel extends ViewModel {
             _listNote.postValue(noteRepository.loadAllNote(userid));
         });
     }
+
+    public void saveNewNote(Note note){
+        noteRepository.createNewNote(note);
+    }
 }

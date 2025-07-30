@@ -6,6 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".fragments.QuickNoteFragment">
 
+<!--    <FrameLayout-->
+<!--        android:id="@+id/frame_replacement"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:elevation="10dp"/>-->
+
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"

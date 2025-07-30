@@ -30,4 +30,6 @@
 
     <color name="cyan">#00F7FF</color>
     <color name="light_cyan">#86F5FF</color>
+
+    <color name="yellow">#E5D887</color>
 </resources>
