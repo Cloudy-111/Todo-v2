@@ -1,6 +1,7 @@
 package com.example.todo_listv2.fake;
 
 import com.example.todo_listv2.Utils.DateTimeUtils;
+import com.example.todo_listv2.models.Note;
 import com.example.todo_listv2.models.Priority;
 import com.example.todo_listv2.models.Tag;
 import com.example.todo_listv2.models.Task;
@@ -52,4 +53,33 @@ public class fakeDB {
 //        String remindAt = "09:00";
 //        return new Task("Completed Routine 1", "Time is Money!", "THIS IS NOTE!", DateTimeUtils.convertDateStringToMillis(startTime), DateTimeUtils.convertDateStringToMillis(endTime), DateTimeUtils.convertTimeStringToMillis(remindAt), "1", "2", false, 0, "1");
 //    }
+
+    public static List<Note> getAllNote(String userId){
+        List<Note> list = new ArrayList<>();
+        list.add(new Note("HEADER", "CONTENT ASKJFH LKAJBSFKAB KA KBASKAJ  CONTENT ASKJFH LKAJBSFKAB KA KBASKAJ BAWSD CONTENT ASKJFH LKAJBSFKAB KA KBASKAJ BAWSD", "#F96060", 0, "1"));
+        list.add(new Note("HEADER", "CONTENT ASKJFH LKAJBSFKAB KA KBASKAJ BAWSD", "#F96060", 0, "1"));
+        list.add(new Note("HEADER", "CONTENT ASKJFH LKAJBSFKAB KA KBASKAJ BAWSD", "#F96060", 0, "1"));
+        list.add(new Note("HEADER", "CONTENT ASKJFH LKAJBSFKAB KA KBASKAJ BAWSD", "#F96060", 0, "1"));
+        list.add(new Note("HEADER", "CONTENT ASKJFH LKAJBSFKAB KA KBASKAJ BAWSD", "#F96060", 0, "1"));
+        list.add(new Note("HEADER", "CONTENT ASKJFH LKAJBSFKAB KA KBASKAJ BAWSD", "#F96060", 0, "1"));
+        list.add(new Note("HEADER", "CONTENT ASKJFH LKAJBSFKAB KA KBASKAJ BAWSD", "#F96060", 0, "1"));
+        list.add(new Note("HEADER", "CONTENT ASKJFH LKAJBSFKAB KA KBASKAJ BAWSD", "#F96060", 0, "1"));
+        list.add(new Note("HEADER", "CONTENT ASKJFH LKAJBSFKAB KA KBASKAJ BAWSD CONTENT ASKJFH LKAJBSFKAB KA KBASKAJ BAWSD", "#F96060", 0, "1"));
+        list.add(new Note("HEADER", "CONTENT ASKJFH LKAJBSFKAB KA KBASKAJ BAWSD CONTENT ASKJFH LKAJBSFKAB KA KBASKAJ BAWSD CONTENT ASKJFH LKAJBSFKAB KA KBASKAJ BAWSD", "", 0, "1"));
+        list.add(new Note("HEADER", "CONTENT ASKJFH LKAJBSFKAB KA KBASKAJ BAWSDCONTENT ASKJFH LKAJBSFKAB KA KBASKAJ BAWSD CONTENT ASKJFH LKAJBSFKAB KA KBASKAJ BAWSD CONTENT ASKJFH LKAJBSFKAB KA KBASKAJ BAWSD CONTENT ASKJFH LKAJBSFKAB KA KBASKAJ BAWSD", "#F96060", 0, "1"));
+        list.add(new Note("HEADER", "CONTENT ASKJFH LKAJBSFKAB KA KBASKAJ BAWSD", "#F96060", 0, "1"));
+        list.add(new Note("HEADER", "CONTENT ASKJFH LKAJBSFKAB KA KBASKAJ BAWSD", "#F96060", 0, "1"));
+        list.add(new Note("HEADER", "CONTENT ASKJFH LKAJBSFKAB KA KBASKAJ BAWSD", "#F96060", 0, "1"));
+        list.add(new Note("HEADER", "CONTENT ASKJFH LKAJBSFKAB KA KBASKAJ BAWSD", "#F96060", 0, "1"));
+        list.add(new Note("HEADER", "CONTENT ASKJFH LKAJBSFKAB KA KBASKAJ BAWSD", "#F96060", 0, "1"));
+        list.add(new Note("HEADER", "CONTENT ASKJFH LKAJBSFKAB KA KBASKAJ BAWSD CONTENT ASKJFH LKAJBSFKAB KA KBASKAJ BAWSD", "#F96060", 0, "1"));
+        list.add(new Note("HEADER", "CONTENT ASKJFH LKAJBSFKAB KA KBASKAJ BAWSDCONTENT ASKJFH LKAJBSFKAB KA KBASKAJ BAWSDCONTENT ASKJFH LKAJBSFKAB KA KBASKAJ BAWSDCONTENT ASKJFH LKAJBSFKAB KA KBASKAJ BAWSDCONTENT ASKJFH LKAJBSFKAB KA KBASKAJ BAWSD", "", 0, "1"));
+        list.add(new Note("HEADER", "CONTENT ASKJFH LKAJBSFKAB KA KBASKAJ BAWSDCONTENT ASKJFH LKAJBSFKAB KA KBASKAJ BAWSD CONTENT ASKJFH LKAJBSFKAB KA KBASKAJ BAWSDvCONTENT ASKJFH LKAJBSFKAB KA KBASKAJ BAWSDCONTENT ASKJFH LKAJBSFKAB KA KBASKAJ BAWSD", "#F96060", 0, "1"));
+        list.add(new Note("HEADER", "CONTENT ASKJFH LKAJBSFKAB KA KBASKAJ BAWSD", "#F96060", 0, "1"));
+        list.add(new Note("HEADER", "CONTENT ASKJFH LKAJBSFKAB KA KBASKAJ BAWSD", "#F96060", 0, "1"));
+        list.add(new Note("HEADER", "CONTENT ASKJFH LKAJBSFKAB KA KBASKAJ BAWSD", "", 0, "1"));
+        list.add(new Note("HEADER", "CONTENT ASKJFH LKAJBSFKAB KA KBASKAJ BAWSD", "", 0, "1"));
+        list.add(new Note("HEADER", "CONTENT ASKJFH LKAJBSFKAB KA KBASKAJ BAWSD", "#F96060", 0, "1"));
+        return list;
+    }
 }

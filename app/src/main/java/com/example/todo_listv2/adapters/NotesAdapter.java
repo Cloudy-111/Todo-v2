@@ -20,14 +20,17 @@ import java.util.List;
 public class NotesAdapter extends RecyclerView.Adapter<NoteItemViewHolder> {
     private List<Note> noteList;
     private OnNoteItemClickListener listener;
+    private List<Integer> colorList, backgrounds;
 
     public interface OnNoteItemClickListener{
-        void onNoteItemClick(Note note);
+        void onNoteItemClick(String noteId);
     }
 
-    public NotesAdapter(List<Note> noteList, OnNoteItemClickListener listener){
+    public NotesAdapter(List<Note> noteList, List<Integer> colorList, List<Integer> backgrounds, OnNoteItemClickListener listener){
         this.noteList = noteList;
         this.listener = listener;
+        this.colorList = colorList;
+        this.backgrounds = backgrounds;
     }
 
     @NonNull
@@ -41,7 +44,12 @@ public class NotesAdapter extends RecyclerView.Adapter<NoteItemViewHolder> {
     public void onBindViewHolder(@NonNull NoteItemViewHolder viewHolder, int position){
         Note note = noteList.get(position);
 
-        viewHolder.bind(note);
+        viewHolder.bind(note, backgrounds);
+
+        viewHolder.itemView.setOnClickListener(v -> {
+            String noteId = note.getId();
+            listener.onNoteItemClick(noteId);
+        });
     }
 
     @Override
@@ -49,7 +57,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NoteItemViewHolder> {
 
     public void setNotes(List<Note> list){
         List<Note> old = this.noteList != null ? this.noteList : Collections.emptyList();
-        List<Note> newList = list != null ? list : new ArrayList<>();
+        List<Note> newList = list != null ? new ArrayList<>(list) : new ArrayList<>();
 
         DiffUtil.DiffResult diff = DiffUtil.calculateDiff(new NoteDiffCallback(old, newList));
         this.noteList = newList;

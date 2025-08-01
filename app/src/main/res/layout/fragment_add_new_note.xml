@@ -27,6 +27,24 @@
             android:layout_weight="1"/>
 
         <FrameLayout
+            android:id="@+id/trash_button"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:background="@drawable/background_circle_1"
+            android:backgroundTint="@color/yellow"
+            android:visibility="gone">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_trash_bin"
+                android:layout_gravity="center"/>
+        </FrameLayout>
+
+        <View
+            android:layout_width="5dp"
+            android:layout_height="0dp"/>
+
+        <FrameLayout
             android:id="@+id/micro_button"
             android:layout_width="35dp"
             android:layout_height="35dp"
@@ -71,7 +89,7 @@
             android:textSize="16sp"
             android:textColor="@color/black"
             android:textColorHint="@color/gray_600"
-            android:inputType="text"/>
+            android:inputType="text|textMultiLine"/>
     </LinearLayout>
 
     <LinearLayout

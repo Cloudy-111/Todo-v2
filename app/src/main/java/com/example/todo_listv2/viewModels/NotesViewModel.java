@@ -18,7 +18,7 @@ public class NotesViewModel extends ViewModel {
     public LiveData<List<Note>> listNote = _listNote;
 
     private MutableLiveData<Note> _note = new MutableLiveData<>();
-    private LiveData<Note> note = _note;
+    public LiveData<Note> note = _note;
 
     private ExecutorService executor = Executors.newSingleThreadExecutor();
 
@@ -28,7 +28,18 @@ public class NotesViewModel extends ViewModel {
         });
     }
 
+    public void loadNoteData(String noteId){
+        executor.execute(() -> {
+            _note.postValue(noteRepository.loadNote(noteId));
+        });
+    }
+
     public void saveNewNote(Note note){
         noteRepository.createNewNote(note);
+    }
+    public void updateNote(Note note){noteRepository.updateNote(note);}
+
+    public void deleteNote(String noteId){
+        noteRepository.deleteNote(noteId);
     }
 }

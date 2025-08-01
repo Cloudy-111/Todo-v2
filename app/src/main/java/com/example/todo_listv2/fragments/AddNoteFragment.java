@@ -39,7 +39,7 @@ public class AddNoteFragment extends DialogFragment {
     private String userId;
     private NotesViewModel notesViewModel;
     private ImageView backButton;
-    private View microButton;
+    private View microButton, trashButton;
     private CardView selectColorButton;
     private EditText titleText, contentText;
     private ColorBackgroundAdapter colorBackgroundAdapter;
@@ -63,12 +63,14 @@ public class AddNoteFragment extends DialogFragment {
         notesViewModel = new ViewModelProvider(getActivity()).get(NotesViewModel.class);
 
         initViews();
+        trashButton.setVisibility(View.GONE);
         setOnClickListener();
     }
 
     private void initViews(){
         backButton = binding.backButton;
         microButton = binding.microButton;
+        trashButton = binding.trashButton;
         selectColorButton = binding.selectColorButton;
         titleText = binding.titleNoteEdit;
         contentText = binding.contentNoteEdit;
@@ -79,17 +81,20 @@ public class AddNoteFragment extends DialogFragment {
     private void setOnClickListener(){
         backButton.setOnClickListener(v -> {
             saveNewNote();
-            requireActivity().getSupportFragmentManager().popBackStack();
-        });
+
+        // reset list after insert new note
+        notesViewModel.loadNoteList(userId);
+        requireActivity().getSupportFragmentManager().popBackStack();
+    });
 
         microButton.setOnClickListener(v -> {
 
-        });
+    });
 
         selectColorButton.setOnClickListener(v -> {
-            showColorBackgroundSelector();
-        });
-    }
+        showColorBackgroundSelector();
+    });
+}
 
     private void saveNewNote(){
         String title = titleText.getText().toString();
