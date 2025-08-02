@@ -74,4 +74,22 @@ public class AuthViewModel extends ViewModel {
             }
         });
     }
+
+    public void updatePassword(String oldPasswordInput, String newPassword, String userId, AuthRepository.OnPasswordResetCallback callback){
+        executor.execute(() -> {
+            checkCurrentPassword(userId, oldPasswordInput, isMatch -> {
+                if(isMatch){
+                    authRepository.updatePassword(newPassword, userId, callback);
+                } else {
+                    callback.onFailure("Password is incorrect");
+                }
+            });
+        });
+    }
+
+    public void checkCurrentPassword(String userId, String inputPassword, AuthRepository.OnPasswordCheckCallback callback) {
+        executor.execute(() -> {
+            authRepository.checkCurrentPassword(userId, inputPassword, callback);
+        });
+    }
 }

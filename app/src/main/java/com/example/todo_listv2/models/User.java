@@ -32,6 +32,10 @@ public class User {
         return new User(id, username, email, null, avatar);
     }
 
+    public static User loadUserWithPassword(String id, String username, String email, String password, String avatar){
+        return new User(id, username, email, password, avatar);
+    }
+
     public String getId() {
         return id;
     }

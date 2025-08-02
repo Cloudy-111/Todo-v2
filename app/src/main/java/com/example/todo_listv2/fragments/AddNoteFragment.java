@@ -84,16 +84,16 @@ public class AddNoteFragment extends DialogFragment {
 
         // reset list after insert new note
         notesViewModel.loadNoteList(userId);
-        requireActivity().getSupportFragmentManager().popBackStack();
-    });
+            requireActivity().getSupportFragmentManager().popBackStack();
+        });
 
         microButton.setOnClickListener(v -> {
 
-    });
+        });
 
         selectColorButton.setOnClickListener(v -> {
-        showColorBackgroundSelector();
-    });
+            showColorBackgroundSelector();
+        });
 }
 
     private void saveNewNote(){

@@ -7,13 +7,20 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -24,10 +31,13 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
 import com.cloudinary.android.callback.UploadCallback;
+import com.example.todo_listv2.R;
 import com.example.todo_listv2.activities.LoginActivity;
 import com.example.todo_listv2.databinding.FragmentProfileBinding;
+import com.example.todo_listv2.repositories.AuthRepository;
 import com.example.todo_listv2.viewModels.AuthViewModel;
 import com.google.android.gms.auth.api.Auth;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.card.MaterialCardView;
 
 public class ProfileFragment extends Fragment{
@@ -35,6 +45,8 @@ public class ProfileFragment extends Fragment{
     private SharedPreferences preferences;
     private String userId;
     private TextView namePrf;
+    private EditText inputOldPassword, inputNewPassword, inputConfirmNewPassword;
+    private Button submitChangePassword;
     private ImageView avatarImage;
     private MaterialCardView changeAvatarButton;
     private FrameLayout editPrfButton, settingButton;
@@ -133,7 +145,7 @@ public class ProfileFragment extends Fragment{
         });
 
         changePasswordButton.setOnClickListener(v -> {
-
+            showDialogChangePassword();
         });
     }
 
@@ -145,5 +157,66 @@ public class ProfileFragment extends Fragment{
 
     private void uploadImageToCloudinary(Uri imageUri){
         authViewModel.uploadImageToCloudinary(requireContext(), imageUri, userId, stringAvatar);
+    }
+
+    private void showDialogChangePassword(){
+        BottomSheetDialog dialog = new BottomSheetDialog(requireContext());
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.dialog_reset_password, null);
+        dialog.setContentView(view);
+
+        inputOldPassword = view.findViewById(R.id.input_old_password);
+        inputNewPassword = view.findViewById(R.id.input_new_password);
+        inputConfirmNewPassword = view.findViewById(R.id.input_confirm_new_password);
+        submitChangePassword = view.findViewById(R.id.button_submit_change_password);
+
+        submitChangePassword.setOnClickListener(v -> {
+            String oldPassword = inputOldPassword.getText().toString().trim();
+            String newPassword = inputNewPassword.getText().toString().trim();
+            String confirmNewPassword = inputConfirmNewPassword.getText().toString().trim();
+
+
+            if (TextUtils.isEmpty(oldPassword) || TextUtils.isEmpty(newPassword) || TextUtils.isEmpty(confirmNewPassword)) {
+                Toast.makeText(getContext(), "Vui lòng nhập đầy đủ thông tin.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (newPassword.length() < 6) {
+                Toast.makeText(getContext(), "Mật khẩu mới phải có ít nhất 6 ký tự.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (!newPassword.equals(confirmNewPassword)) {
+                Toast.makeText(getContext(), "Mật khẩu mới không khớp.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (oldPassword.equals(newPassword)) {
+                Toast.makeText(getContext(), "Mật khẩu mới phải khác mật khẩu cũ.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            authViewModel.updatePassword(oldPassword, newPassword, userId, new AuthRepository.OnPasswordResetCallback() {
+                @Override
+                public void onSuccess() {
+                    Log.d("Auth", "Update Password Successfully");
+
+                    // This is background thread, so use handler to change to UI thread to use Toast to update UI
+                    new Handler(Looper.getMainLooper()).post(() -> {
+                        Toast.makeText(requireContext(), "Update Password Successfully", Toast.LENGTH_SHORT).show();
+                    });
+                    dialog.dismiss();
+                }
+
+                @Override
+                public void onFailure(String errorMessage) {
+                    Log.e("Auth_error", errorMessage);
+                    new Handler(Looper.getMainLooper()).post(() -> {
+                        Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                    });
+                }
+            });
+        });
+
+        dialog.show();
     }
 }

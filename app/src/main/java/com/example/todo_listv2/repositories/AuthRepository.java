@@ -32,6 +32,15 @@ public class AuthRepository {
         void onFailure();
     }
 
+    public interface OnPasswordResetCallback{
+        void onSuccess();
+        void onFailure(String errorMessage);
+    }
+
+    public interface  OnPasswordCheckCallback{
+        void onResult(boolean isMatch);
+    }
+
     public AuthRepository(){}
 
     public AuthRepository(Context context) {
@@ -157,6 +166,34 @@ public class AuthRepository {
         return result;
     }
 
+    public User loadUserWithPassword(String userId){
+        Request request = new Request.Builder()
+                .url(baseURL + "/user/password/" + userId)
+                .header("Accept", "application/json")
+                .header("Content-Type", "application/json")
+                .build();
+
+        User result = new User();
+        try{
+            Response response = client.newCall(request).execute();
+            if(response.isSuccessful()){
+                String resStr = response.body().string();
+                JSONObject json = new JSONObject(resStr);
+                JSONObject data = json.getJSONObject("data");
+                result = User.loadUserWithPassword(
+                        data.getString("id"),
+                        data.getString("username"),
+                        data.getString("email"),
+                        data.getString("password"),
+                        data.getString("avatar")
+                );
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return result;
+    }
+
     public void updateProfileImageUrl(String imageUrl, String userId, OnAvatarUpdatedCallback callback){
         JSONObject json = new JSONObject();
         try{
@@ -206,5 +243,67 @@ public class AuthRepository {
                 }
             }
         });
+    }
+
+    public void updatePassword(String newPassword, String userId, OnPasswordResetCallback callback){
+        JSONObject json = new JSONObject();
+        try{
+            json.put("userId", userId);
+            json.put("newPassword", newPassword);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        RequestBody body = RequestBody.create(json.toString(), MediaType.parse("application/json"));
+        Request request = new Request.Builder()
+                .url(baseURL + "/user/updatePassword")
+                .post(body)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Log.e("Auth_error", "Can't connect to server");
+                callback.onFailure("Can't connect to server");
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (response.isSuccessful() && response.body() != null) {
+                    try {
+                        String resStr = response.body().string();
+
+                        JSONObject resJSON = new JSONObject(resStr);
+                        boolean success = resJSON.getBoolean("success");
+                        if (success){
+                            String message = resJSON.getString("message");
+                            Log.d("Auth", message);
+                            callback.onSuccess();
+                        } else {
+                            Log.d("Auth", resJSON.getString("message"));
+                            callback.onFailure(resJSON.getString("message"));
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Log.e("Auth_error", "Error Response: " + e.getMessage());
+                        callback.onFailure(e.getMessage());
+                    }
+                } else {
+                    Log.e("Auth_error", "Error Server: " + response.code());
+                    callback.onFailure(String.valueOf(response.code()));
+                }
+            }
+        });
+    }
+
+    public void checkCurrentPassword(String userId, String inputPassword, OnPasswordCheckCallback callback){
+        User user = loadUserWithPassword(userId);
+        if(user != null){
+//            Log.d("User", user.getPassword() + "...." + inputPassword);
+            boolean isMatch = user.getPassword().equals(inputPassword);
+            callback.onResult(isMatch);
+        } else {
+            callback.onResult(false);
+        }
     }
 }
