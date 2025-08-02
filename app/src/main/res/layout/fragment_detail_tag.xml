@@ -79,7 +79,7 @@
                 android:id="@+id/all_task_filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/background_circle_1"
+                android:background="@drawable/background_circle"
                 android:backgroundTint="@color/light_purple"
                 android:paddingHorizontal="8dp"
                 android:layout_marginRight="5dp">
@@ -94,7 +94,7 @@
                 android:id="@+id/overdue_task_filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/background_circle_1"
+                android:background="@drawable/background_circle"
                 android:backgroundTint="@color/light_primary"
                 android:paddingHorizontal="8dp"
                 android:layout_marginRight="5dp">
@@ -109,7 +109,7 @@
                 android:id="@+id/completed_task_filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/background_circle_1"
+                android:background="@drawable/background_circle"
                 android:backgroundTint="@color/light_green"
                 android:paddingHorizontal="8dp"
                 android:layout_marginRight="5dp">
@@ -124,7 +124,7 @@
                 android:id="@+id/will_do_task_filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/background_circle_1"
+                android:background="@drawable/background_circle"
                 android:backgroundTint="@color/light_cyan"
                 android:paddingHorizontal="8dp"
                 android:layout_marginRight="5dp">

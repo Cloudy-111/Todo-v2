@@ -26,6 +26,8 @@ public class AuthRepository {
     private SharedPreferences preferences;
     private Context context;
 
+    public AuthRepository(){}
+
     public AuthRepository(Context context) {
         this.context = context;
     }
@@ -120,5 +122,32 @@ public class AuthRepository {
         } catch (Exception e){
             callback.onError("Error in Response");
         }
+    }
+
+    public User loadUser(String userId){
+        Request request = new Request.Builder()
+                .url(baseURL + "/user/" + userId)
+                .header("Accept", "application/json")
+                .header("Content-Type", "application/json")
+                .build();
+
+        User result = new User();
+        try{
+            Response response = client.newCall(request).execute();
+            if(response.isSuccessful()){
+                String resStr = response.body().string();
+                JSONObject json = new JSONObject(resStr);
+                JSONObject data = json.getJSONObject("data");
+                result = User.loadUser(
+                        data.getString("id"),
+                        data.getString("username"),
+                        data.getString("email"),
+                        data.getString("avatar")
+                );
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return result;
     }
 }

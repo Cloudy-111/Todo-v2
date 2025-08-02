@@ -53,7 +53,7 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     private void signupUser(String username, String password, String email, String image_avatar){
-        User newUser = new User(username, email, password, image_avatar);
+        User newUser = User.createNewUser(username, email, password, image_avatar);
         authRepository.register(newUser, new AuthRepository.AuthCallback() {
             @Override
             public void onSuccess(String message) {

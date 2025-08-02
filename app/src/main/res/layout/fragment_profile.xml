@@ -4,14 +4,172 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <FrameLayout
+        android:id="@+id/background_prf"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:id="@+id/imageBackground"
+            android:src="@drawable/bg_pf"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:adjustViewBounds="true"/>
+
+        <FrameLayout
+            android:id="@+id/edit_profile_button"
+            android:layout_margin="10dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_gravity="top|end"
+            android:elevation="8dp"
+            android:background="@drawable/background_circle_1" >
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_pen"/>
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/setting_button"
+            android:layout_margin="10dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:elevation="8dp"
+            android:layout_gravity="bottom|end"
+            android:background="@drawable/background_circle_1" >
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_setting"/>
+        </FrameLayout>
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/avatar_container"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="110dp"
+        android:layout_marginLeft="10dp">
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            app:cardCornerRadius="50dp"
+            app:strokeColor="@color/white"
+            app:strokeWidth="3dp"
+            android:elevation="8dp">
+
+            <ImageView
+                android:id="@+id/avatar_prf"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/bg_avatar"/>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/change_avatar_button"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_gravity="bottom|right"
+            app:cardCornerRadius="50dp"
+            app:cardBackgroundColor="@color/white"
+            app:contentPadding="3dp">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_camera"/>
+        </com.google.android.material.card.MaterialCardView>
+    </FrameLayout>
+
     <TextView
+        android:id="@+id/name_prf"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/background_prf"
+        app:layout_constraintStart_toEndOf="@id/avatar_container"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:text="THIS IS MY NAME"
+        android:textColor="@color/black"
+        app:fontFamily="@font/sf_compact_rounded_bold"
+        android:textSize="20sp"
+        android:maxLines="1"/>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="THIS IS PROFILE TAB"
-        android:textColor="@color/black"
-        android:textSize="40sp"
-        android:textStyle="bold"
-        android:fontFamily="@font/sf_compact_rounded_bold"
+        app:layout_constraintTop_toTopOf="@id/background_prf"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:gravity="top"
+        android:paddingHorizontal="10dp"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <LinearLayout
+            android:id="@+id/logout_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_circle"
+            android:backgroundTint="@color/primary"
+            android:padding="8dp"
+            android:elevation="8dp"
+            android:gravity="center_vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sign out"
+                android:textColor="@color/white"
+                app:fontFamily="@font/sf_compact_rounded_bold"
+                android:textSize="18sp"
+                android:layout_weight="1"/>
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_logout"
+                app:tint="@color/white"/>
+        </LinearLayout>
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="20dp"/>
+
+        <LinearLayout
+            android:id="@+id/change_password_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_circle"
+            android:backgroundTint="@color/secondary"
+            android:padding="8dp"
+            android:elevation="8dp"
+            android:gravity="center_vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Change Password"
+                android:textColor="@color/white"
+                app:fontFamily="@font/sf_compact_rounded_bold"
+                android:textSize="18sp"
+                android:layout_weight="1"/>
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_key"
+                app:tint="@color/white"/>
+        </LinearLayout>
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

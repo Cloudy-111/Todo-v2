@@ -11,12 +11,25 @@ public class User {
 
     public User() {}
 
-    public User(String username, String email, String password, String avatar) {
-        this.id = UUID.randomUUID().toString();
+    public User(String id, String username, String email, String password, String avatar) {
+        this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
         this.avatar = avatar;
+    }
+
+    public static User createNewUser(String username, String email, String password, String avatar){
+        return new User(
+                UUID.randomUUID().toString(),
+                username,
+                email,
+                password,
+                avatar);
+    }
+
+    public static User loadUser(String id, String username, String email, String avatar){
+        return new User(id, username, email, null, avatar);
     }
 
     public String getId() {
