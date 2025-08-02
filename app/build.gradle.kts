@@ -1,5 +1,16 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.androidApplication)
+}
+
+var cloudinaryPropertiesFile = rootProject.file(".env");
+val cloudinaryProperties = Properties().apply {
+    if (cloudinaryPropertiesFile.exists()) {
+        load(cloudinaryPropertiesFile.inputStream())
+    } else {
+        println("⚠️ File .env not found!")
+    }
 }
 
 android {
@@ -14,6 +25,10 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "CLOUD_NAME", "\"${cloudinaryProperties["CLOUD_NAME"]}\"")
+        buildConfigField("String", "API_KEY", "\"${cloudinaryProperties["API_KEY"]}\"")
+        buildConfigField("String", "API_SECRET", "\"${cloudinaryProperties["API_SECRET"]}\"")
     }
 
     buildTypes {
@@ -35,6 +50,9 @@ android {
     dataBinding {
         enable = true
     }
+    buildFeatures{
+        buildConfig = true
+    }
 }
 
 dependencies {
@@ -55,4 +73,5 @@ dependencies {
     implementation("com.github.skydoves:colorpickerview:2.2.4")
     implementation("com.google.android.gms:play-services-auth:20.7.0")
     implementation("com.google.code.gson:gson:2.10.1")
+    implementation("com.cloudinary:cloudinary-android:2.3.1")
 }

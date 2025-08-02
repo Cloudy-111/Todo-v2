@@ -20,10 +20,12 @@ import com.example.todo_listv2.fragments.CalendarFragment;
 import com.example.todo_listv2.fragments.HomeFragment;
 import com.example.todo_listv2.fragments.ProfileFragment;
 import com.example.todo_listv2.fragments.QuickNoteFragment;
+import com.example.todo_listv2.repositories.ImageRepository;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private SharedPreferences preferences;
+    private String userId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,10 +33,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         preferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
-        String userId = preferences.getString("user_id", "0");
+        userId = preferences.getString("user_id", "0");
+
+        ImageRepository.initCloudinary(this);
 
         HomeFragment homeFragment = new HomeFragment();
-        ProfileFragment profileFragment = new ProfileFragment();
 
         replaceFragment(homeFragment);
         binding.bottomNavigationView.setBackground(null);

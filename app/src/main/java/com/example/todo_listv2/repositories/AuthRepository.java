@@ -2,6 +2,7 @@ package com.example.todo_listv2.repositories;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -25,6 +26,11 @@ public class AuthRepository {
     private final String baseURL = "http://192.168.10.104:5000";
     private SharedPreferences preferences;
     private Context context;
+
+    public interface OnAvatarUpdatedCallback {
+        void onSuccess();
+        void onFailure();
+    }
 
     public AuthRepository(){}
 
@@ -149,5 +155,56 @@ public class AuthRepository {
             e.printStackTrace();
         }
         return result;
+    }
+
+    public void updateProfileImageUrl(String imageUrl, String userId, OnAvatarUpdatedCallback callback){
+        JSONObject json = new JSONObject();
+        try{
+            json.put("userId", userId);
+            json.put("avatar", imageUrl);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        RequestBody body = RequestBody.create(json.toString(), MediaType.parse("application/json"));
+        Request request = new Request.Builder()
+                .url(baseURL + "/user/updateAvatar")
+                .post(body)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Log.e("Auth_error", "Can't connect to server");
+                callback.onFailure();
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (response.isSuccessful() && response.body() != null) {
+                    try {
+                        String resStr = response.body().string();
+
+                        JSONObject resJSON = new JSONObject(resStr);
+                        boolean success = resJSON.getBoolean("success");
+                        if (success){
+                            String message = resJSON.getString("message");
+                            Log.d("Auth", message);
+                            callback.onSuccess();
+                        } else {
+                            Log.d("Auth", resJSON.getString("message"));
+                            callback.onFailure();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Log.e("Auth_error", "Error Response: " + e.getMessage());
+                        callback.onFailure();
+                    }
+                } else {
+                    Log.e("Auth_error", "Error Server: " + response.code());
+                    callback.onFailure();
+                }
+            }
+        });
     }
 }
