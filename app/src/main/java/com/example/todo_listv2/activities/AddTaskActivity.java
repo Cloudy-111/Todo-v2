@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.todo_listv2.R;
 import com.example.todo_listv2.Utils.ColorUtils;
 import com.example.todo_listv2.Utils.DateTimeUtils;
+import com.example.todo_listv2.Utils.ReminderUtils;
 import com.example.todo_listv2.adapters.PriorityAdapter;
 import com.example.todo_listv2.adapters.TagAdapter;
 import com.example.todo_listv2.databinding.ActivityAddTaskBinding;
@@ -338,6 +339,9 @@ public class AddTaskActivity extends AppCompatActivity {
                     Toast.makeText(AddTaskActivity.this, taskId, Toast.LENGTH_SHORT).show();
 
                     saveChecklistForTask(taskId);
+
+                    // Set reminder for Task
+                    ReminderUtils.scheduleTaskReminder(getApplicationContext(), newTask);
 
                     Intent intent = new Intent(AddTaskActivity.this, MainActivity.class);
                     startActivity(intent);
