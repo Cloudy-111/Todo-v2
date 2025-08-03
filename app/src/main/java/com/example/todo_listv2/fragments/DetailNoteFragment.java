@@ -1,12 +1,15 @@
 package com.example.todo_listv2.fragments;
 
+import static android.app.Activity.RESULT_OK;
 import static android.content.Context.MODE_PRIVATE;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,8 +17,10 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -32,6 +37,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 
 public class DetailNoteFragment extends DialogFragment {
     private FragmentAddNewNoteBinding binding;
@@ -48,8 +55,12 @@ public class DetailNoteFragment extends DialogFragment {
     private int backgroundId = 0;
     private String colorSelected = "";
     private String noteId;
+    private String oldTitleText, oldContentText, oldColorSelected;
+    private Integer oldBackgroundId;
     private List<Integer> colorList, backgrounds;
-    private String[] colorHexList = {"#75f4f4", "#90e0f3", "#b8b3e9", "#d999b9", "#d17b88", "#f49097", "#dfb2f4", "#f5e960", "#f2f5ff", "#55d6c2"};
+    private List<String> colorHexList = Arrays.asList("#75f4f4", "#90e0f3", "#b8b3e9", "#d999b9", "#d17b88", "#f49097", "#dfb2f4", "#f5e960", "#f2f5ff", "#55d6c2");
+
+    private static final int REQUEST_CODE_SPEECH_INPUT = 1;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container, @NonNull Bundle savedInstanceState){
@@ -100,6 +111,29 @@ public class DetailNoteFragment extends DialogFragment {
             if(note != null){
                 titleText.setText(note.getHeader());
                 contentText.setText(note.getContent());
+                colorSelected = note.getColor();
+                backgroundId = note.getBackgroundId();
+
+                oldBackgroundId = backgroundId;
+                oldColorSelected = colorSelected;
+                oldTitleText = note.getHeader();
+                oldContentText = note.getContent();
+
+                if(backgroundId == 0){
+                    if(colorSelected != null && !colorSelected.isEmpty()){
+                        int indexColor = colorHexList.indexOf(colorSelected);
+                        int color = indexColor == -1 ? Color.WHITE : colorList.get(indexColor);
+                        fragmentRoot.setBackgroundTintList(ColorStateList.valueOf(color));
+                    }
+                } else {
+                    fragmentRoot.setBackgroundResource(backgrounds.get(backgroundId));
+                    if(backgroundId == 4 || backgroundId == 6) {
+                        setColorTint(Color.BLACK);
+                    } else {
+                        setColorTint(Color.WHITE);
+                    }
+                }
+
             }
         });
     }
@@ -117,14 +151,19 @@ public class DetailNoteFragment extends DialogFragment {
 
     private void setOnClickListener(){
         backButton.setOnClickListener(v -> {
-            updateNote();
+            String newTitle = titleText.getText().toString();
+            String newContent = contentText.getText().toString();
 
-            notesViewModel.loadNoteList(userId);
+            if(!newContent.equals(oldContentText) || !newTitle.equals(oldTitleText) || oldBackgroundId != backgroundId || oldColorSelected != colorSelected){
+                updateNote(newTitle, newContent);
+                notesViewModel.loadNoteList(userId);
+            }
+
             requireActivity().getSupportFragmentManager().popBackStack();
         });
 
         microButton.setOnClickListener(v -> {
-
+            speechToText();
         });
 
         trashButton.setOnClickListener(v -> {
@@ -154,12 +193,9 @@ public class DetailNoteFragment extends DialogFragment {
         notesViewModel.deleteNote(noteId);
     }
 
-    private void updateNote(){
-        String title = titleText.getText().toString();
-        String content = contentText.getText().toString();
-
-        if(!content.isEmpty()){
-            Note newNote = new Note(noteId, title, content, colorSelected, backgroundId, userId);
+    private void updateNote(String newTitle, String newContent){
+        if(!newContent.isEmpty()){
+            Note newNote = new Note(noteId, newTitle, newContent, colorSelected, backgroundId, userId);
             notesViewModel.updateNote(newNote);
         }
     }
@@ -176,7 +212,7 @@ public class DetailNoteFragment extends DialogFragment {
             fragmentRoot.setBackgroundTintList(ColorStateList.valueOf(selectedColor));
             int index = colorList.indexOf(selectedColor);
 
-            colorSelected = colorHexList[index];
+            colorSelected = colorHexList.get(index);
         }));
 
         backgroundRecycler.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
@@ -207,5 +243,42 @@ public class DetailNoteFragment extends DialogFragment {
         contentText.setTextColor(ColorStateList.valueOf(color));
         titleText.setTextColor(ColorStateList.valueOf(color));
         backButton.setImageTintList(ColorStateList.valueOf(color));
+    }
+
+    private void speechToText(){
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH); // Create Intent to start S2T
+
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak to Text");
+
+        try {
+            startActivityForResult(
+                    intent, REQUEST_CODE_SPEECH_INPUT
+            );
+        } catch (Exception e){
+            Toast.makeText(getContext(), " " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    @Deprecated
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_CODE_SPEECH_INPUT) {
+            if (resultCode == RESULT_OK && data != null) {
+                ArrayList<String> result
+                        = data.getStringArrayListExtra(
+                        RecognizerIntent.EXTRA_RESULTS);
+
+                if (result != null && !result.isEmpty()) {
+                    contentText.setText(Objects.requireNonNull(
+                            result.get(0)));
+                }
+            }
+        }
     }
 }
