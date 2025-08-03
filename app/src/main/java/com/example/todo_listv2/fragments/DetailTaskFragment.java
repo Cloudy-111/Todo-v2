@@ -161,6 +161,21 @@ public class DetailTaskFragment extends DialogFragment {
                 }
             });
         }
+        if(!isProgressTask){
+            taskDetailViewModel.makeTaskCompleted(taskId, new TaskRepository.TaskCallback() {
+                @Override
+                public void onSuccess(String taskId) {
+                    if(listener != null){
+                        listener.onTaskUpdated();
+                    }
+                }
+
+                @Override
+                public void onError(String error) {
+
+                }
+            });
+        }
 
         initialMapItemStatus.clear();
         currentMapItemStatus.clear();

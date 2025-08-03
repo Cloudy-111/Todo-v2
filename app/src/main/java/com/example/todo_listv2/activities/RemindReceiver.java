@@ -1,5 +1,6 @@
 package com.example.todo_listv2.activities;
 
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -19,6 +20,10 @@ public class RemindReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent){
         String taskTitle = intent.getStringExtra("task_title");
 
+        showNotification(context, taskTitle);
+    }
+
+    private void showNotification(Context context, String taskTitle){
         String channelId = "todo_task_channel_01";
         String channelName = "TODO Task Reminders";
 
@@ -28,6 +33,8 @@ public class RemindReceiver extends BroadcastReceiver {
                     channelName,
                     NotificationManager.IMPORTANCE_HIGH
             );
+
+            channel.setDescription("Task reminder notifications");
             NotificationManager manager = context.getSystemService(NotificationManager.class);
             manager.createNotificationChannel(channel);
         }
@@ -42,7 +49,9 @@ public class RemindReceiver extends BroadcastReceiver {
                 .setContentText(taskTitle != null ? taskTitle : "Bạn có một công việc cần làm.")
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setContentIntent(pendingIntent)
-                .setAutoCancel(true);
+                .setAutoCancel(true)
+                .setVibrate(new long[]{500, 1000})
+                .setDefaults(Notification.DEFAULT_ALL);;
 
         NotificationManager notificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
