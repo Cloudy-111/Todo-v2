@@ -10,7 +10,6 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,7 +48,6 @@ public class DetailNoteFragment extends DialogFragment {
     private View microButton, trashButton;
     private CardView selectColorButton;
     private EditText titleText, contentText;
-    private ColorBackgroundAdapter colorBackgroundAdapter;
     private RecyclerView colorRecycler, backgroundRecycler;
     private LinearLayout fragmentRoot;
     private int backgroundId = 0;
@@ -58,12 +56,12 @@ public class DetailNoteFragment extends DialogFragment {
     private String oldTitleText, oldContentText, oldColorSelected;
     private Integer oldBackgroundId;
     private List<Integer> colorList, backgrounds;
-    private List<String> colorHexList = Arrays.asList("#75f4f4", "#90e0f3", "#b8b3e9", "#d999b9", "#d17b88", "#f49097", "#dfb2f4", "#f5e960", "#f2f5ff", "#55d6c2");
+    private final List<String> colorHexList = Arrays.asList("#75f4f4", "#90e0f3", "#b8b3e9", "#d999b9", "#d17b88", "#f49097", "#dfb2f4", "#f5e960", "#f2f5ff", "#55d6c2");
 
     private static final int REQUEST_CODE_SPEECH_INPUT = 1;
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container, @NonNull Bundle savedInstanceState){
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
         binding = FragmentAddNewNoteBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
@@ -154,7 +152,7 @@ public class DetailNoteFragment extends DialogFragment {
             String newTitle = titleText.getText().toString();
             String newContent = contentText.getText().toString();
 
-            if(!newContent.equals(oldContentText) || !newTitle.equals(oldTitleText) || oldBackgroundId != backgroundId || oldColorSelected != colorSelected){
+            if(!newContent.equals(oldContentText) || !newTitle.equals(oldTitleText) || oldBackgroundId != backgroundId || oldColorSelected.equals(colorSelected)){
                 updateNote(newTitle, newContent);
                 notesViewModel.loadNoteList(userId);
             }
@@ -162,9 +160,7 @@ public class DetailNoteFragment extends DialogFragment {
             requireActivity().getSupportFragmentManager().popBackStack();
         });
 
-        microButton.setOnClickListener(v -> {
-            speechToText();
-        });
+        microButton.setOnClickListener(v -> speechToText());
 
         trashButton.setOnClickListener(v -> {
             AlertDialog.Builder dialog = new AlertDialog.Builder(getContext())
@@ -176,17 +172,13 @@ public class DetailNoteFragment extends DialogFragment {
                         notesViewModel.loadNoteList(userId);
                         requireActivity().getSupportFragmentManager().popBackStack();
                     }))
-                    .setNegativeButton("NO", (((dialog1, which) -> {
-                        dialog1.dismiss();
-                    })))
+                    .setNegativeButton("NO", (((dialog1, which) -> dialog1.dismiss())))
                     .setCancelable(false);
 
             dialog.show();
         });
 
-        selectColorButton.setOnClickListener(v -> {
-            showColorBackgroundSelector();
-        });
+        selectColorButton.setOnClickListener(v -> showColorBackgroundSelector());
     }
 
     private void deleteNote(String noteId){

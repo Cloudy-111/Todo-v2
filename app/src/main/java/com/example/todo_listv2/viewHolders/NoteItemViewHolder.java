@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
@@ -15,8 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.todo_listv2.R;
 import com.example.todo_listv2.models.Note;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class NoteItemViewHolder extends RecyclerView.ViewHolder {

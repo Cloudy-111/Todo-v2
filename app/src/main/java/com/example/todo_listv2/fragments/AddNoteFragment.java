@@ -22,7 +22,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -49,7 +48,6 @@ public class AddNoteFragment extends DialogFragment {
     private View microButton, trashButton;
     private CardView selectColorButton;
     private EditText titleText, contentText;
-    private ColorBackgroundAdapter colorBackgroundAdapter;
     private RecyclerView colorRecycler, backgroundRecycler;
     private LinearLayout fragmentRoot;
     private int backgroundId = 0;
@@ -58,7 +56,7 @@ public class AddNoteFragment extends DialogFragment {
     private static final int REQUEST_CODE_SPEECH_INPUT = 1;
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container, @NonNull Bundle savedInstanceState){
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
         binding = FragmentAddNewNoteBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
@@ -96,13 +94,9 @@ public class AddNoteFragment extends DialogFragment {
             requireActivity().getSupportFragmentManager().popBackStack();
         });
 
-        microButton.setOnClickListener(v -> {
-            speechToText();
-        });
+        microButton.setOnClickListener(v -> speechToText());
 
-        selectColorButton.setOnClickListener(v -> {
-            showColorBackgroundSelector();
-        });
+        selectColorButton.setOnClickListener(v -> showColorBackgroundSelector());
 }
 
     private void saveNewNote(){
