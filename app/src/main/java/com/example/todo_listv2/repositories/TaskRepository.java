@@ -260,7 +260,7 @@ public class TaskRepository {
         });
     }
 
-    public void makeTaskCompleted(String taskId){
+    public void makeTaskCompleted(String taskId, TaskCallback callback){
         Request request = new Request.Builder()
                 .url(baseURL + "/task/completed/" + taskId)
                 .put(RequestBody.create("", MediaType.parse("application/json")))
@@ -271,14 +271,23 @@ public class TaskRepository {
             public void onFailure(Call call, IOException e) {
                 e.printStackTrace();
                 Log.d("Task", "Exception: " + (e.getMessage() != null ? e.getMessage() : "Unknown error"));
+                if (callback != null) {
+                    callback.onError(e.getMessage());
+                }
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
                     Log.d("Task", "Task Completed");
+                    if (callback != null) {
+                        callback.onSuccess(taskId);
+                    }
                 } else {
                     Log.d("Task", "Failed to complete task");
+                    if (callback != null) {
+                        callback.onError("Failed to complete task");
+                    }
                 }
             }
         });

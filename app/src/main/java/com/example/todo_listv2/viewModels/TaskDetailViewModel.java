@@ -65,7 +65,7 @@ public class TaskDetailViewModel extends ViewModel {
     }
 
     public void makeTaskCompleted(String taskId, TaskRepository.TaskCallback callback){
-        taskRepository.makeTaskCompleted(taskId);
+        taskRepository.makeTaskCompleted(taskId, callback);
     }
 
     public void updateChecklistItem(List<String> listItemNeedUpdate, CheckListRepository.CheckListCallback callback){

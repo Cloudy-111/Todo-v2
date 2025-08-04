@@ -1,6 +1,7 @@
 package com.example.todo_listv2.viewHolders;
 
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.util.Log;
@@ -39,6 +40,20 @@ public class TaskViewHolder extends RecyclerView.ViewHolder {
         checkBox.setChecked(task.isCompleted());
         nameTask.setText(TextUtils.ellipsize(task.getTitle(), MAX_LENGTH_TITLE));
         timeRemind.setText(DateTimeUtils.formatTime(task.getRemindAt()));
+
+        if(task.isCompleted()){
+            nameTask.setPaintFlags(nameTask.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            timeRemind.setPaintFlags(timeRemind.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+
+            timeRemind.setTextColor(Color.GRAY);
+            nameTask.setTextColor(Color.GRAY);
+        } else {
+            nameTask.setPaintFlags(nameTask.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+            timeRemind.setPaintFlags(timeRemind.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+
+            timeRemind.setTextColor(Color.GRAY);
+            nameTask.setTextColor(Color.BLACK);
+        }
 
         Tag tag = mapTag.get(task.getTagId());
         if(tag != null){

@@ -6,6 +6,8 @@ import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +30,7 @@ import com.example.todo_listv2.databinding.FragmentDetailTaskBinding;
 import com.example.todo_listv2.models.Checklist;
 import com.example.todo_listv2.repositories.CheckListRepository;
 import com.example.todo_listv2.repositories.TaskRepository;
+import com.example.todo_listv2.viewModels.TaskDayViewModel;
 import com.example.todo_listv2.viewModels.TaskDetailViewModel;
 
 import java.util.ArrayList;
@@ -43,6 +46,7 @@ public class DetailTaskFragment extends DialogFragment {
     private Button completedTaskButton;
     private TextView nameTask, nameTag, namePriority, noteTask, statusTask, startDateTask, endDateTask, remindAtTask, percent_complete_task;
     private TaskDetailViewModel taskDetailViewModel;
+    private TaskDayViewModel taskDayViewModel;
     private View tagColorView, priorityColorView;
     private RecyclerView checklistItemsRecyclerView;
     private View progressGroup;
@@ -80,6 +84,7 @@ public class DetailTaskFragment extends DialogFragment {
         userId = preferences.getString("user_id", "1");
         taskDetailViewModel = new ViewModelProvider(this).get(TaskDetailViewModel.class);
         taskId = getArguments() != null ? getArguments().getString("taskId") : null;
+        taskDayViewModel = new ViewModelProvider(this).get(TaskDayViewModel.class);
 
         initViews();
         observeData();
@@ -135,9 +140,12 @@ public class DetailTaskFragment extends DialogFragment {
                     }
                     double successRate = (double) completedItems / updatedList.size();
                     taskDetailViewModel.updateProgressTask(taskId, successRate);
-                    if(listener != null){
-                        listener.onTaskUpdated();
-                    }
+                    new Handler(Looper.getMainLooper()).post(() -> {
+                        taskDayViewModel.loadData(DateTimeUtils.getTodayDate(), userId);
+                        if (listener != null) {
+                            listener.onTaskUpdated();
+                        }
+                    });
                 }
 
                 @Override
@@ -150,9 +158,12 @@ public class DetailTaskFragment extends DialogFragment {
             taskDetailViewModel.makeTaskCompleted(taskId, new TaskRepository.TaskCallback() {
                 @Override
                 public void onSuccess(String taskId) {
-                    if(listener != null){
-                        listener.onTaskUpdated();
-                    }
+                    new Handler(Looper.getMainLooper()).post(() -> {
+                        taskDayViewModel.loadData(DateTimeUtils.getTodayDate(), userId);
+                        if (listener != null) {
+                            listener.onTaskUpdated();
+                        }
+                    });
                 }
 
                 @Override
@@ -165,9 +176,12 @@ public class DetailTaskFragment extends DialogFragment {
             taskDetailViewModel.makeTaskCompleted(taskId, new TaskRepository.TaskCallback() {
                 @Override
                 public void onSuccess(String taskId) {
-                    if(listener != null){
-                        listener.onTaskUpdated();
-                    }
+                    new Handler(Looper.getMainLooper()).post(() -> {
+                        taskDayViewModel.loadData(DateTimeUtils.getTodayDate(), userId);
+                        if (listener != null) {
+                            listener.onTaskUpdated();
+                        }
+                    });
                 }
 
                 @Override
