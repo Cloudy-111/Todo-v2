@@ -37,6 +37,9 @@ import com.example.todo_listv2.databinding.FragmentProfileBinding;
 import com.example.todo_listv2.repositories.AuthRepository;
 import com.example.todo_listv2.viewModels.AuthViewModel;
 import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.card.MaterialCardView;
 
@@ -135,9 +138,21 @@ public class ProfileFragment extends Fragment{
         });
 
         signOutButton.setOnClickListener(v -> {
-            preferences.edit().putString("user_id", "0").apply();
-            Intent intent = new Intent(getContext(), LoginActivity.class);
-            startActivity(intent);
+            String authType = preferences.getString("auth_type", "normal");
+            if ("google".equals(authType)) {
+                GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                        .requestIdToken(getString(R.string.default_web_client_id))
+                        .requestEmail()
+                        .build();
+
+                GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(requireContext(), gso);
+
+                mGoogleSignInClient.signOut().addOnCompleteListener(task -> {
+                    clearSessionAndGoToLogin();
+                });
+            } else {
+                clearSessionAndGoToLogin();
+            }
         });
 
         changeAvatarButton.setOnClickListener(v -> {
@@ -147,6 +162,17 @@ public class ProfileFragment extends Fragment{
         changePasswordButton.setOnClickListener(v -> {
             showDialogChangePassword();
         });
+    }
+
+    private void clearSessionAndGoToLogin(){
+        preferences.edit()
+                .putString("user_id", "0")
+                .putString("auth_type", "")
+                .apply();
+
+        Intent intent = new Intent(getContext(), LoginActivity.class);
+        startActivity(intent);
+        requireActivity().finish();
     }
 
     private void openImageChooser(){

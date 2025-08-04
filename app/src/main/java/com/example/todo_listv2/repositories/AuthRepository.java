@@ -83,7 +83,7 @@ public class AuthRepository {
                                 String userId = resJSON.getString("user_id");
 
                                 preferences = context.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
-                                preferences.edit().putString("user_id", userId).apply();
+                                preferences.edit().putString("user_id", userId).putString("auth_type", "normal").apply();
 
                                 callback.onSuccess("Success");
                             } catch (JSONException e) {

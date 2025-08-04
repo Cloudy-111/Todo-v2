@@ -145,7 +145,7 @@ public class LoginActivity extends AppCompatActivity {
                         authRepository.loginUserGoogle(user);
 
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                        preferences.edit().putString("user_id", userId).apply();
+                        preferences.edit().putString("user_id", userId).putString("auth_type", "google").apply();
 
                         startActivity(intent);
                         finish();
