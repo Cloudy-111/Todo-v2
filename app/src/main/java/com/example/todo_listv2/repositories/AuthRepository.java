@@ -7,6 +7,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.example.todo_listv2.models.User;
+import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -137,6 +138,39 @@ public class AuthRepository {
         } catch (Exception e){
             callback.onError("Error in Response");
         }
+    }
+
+    public void loginUserGoogle(User user){
+        Gson gson = new Gson();
+        String json;
+        try{
+            json = gson.toJson(user);
+        } catch (Exception e){
+            e.printStackTrace();
+            return;
+        }
+
+        RequestBody body = RequestBody.create(json, MediaType.parse("application/json"));
+        Request request = new Request.Builder()
+                .url(baseURL + "/user/loginGoogle")
+                .post(body)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.e("LoginGoogle", "API call failed: " + e.getMessage());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    Log.d("LoginGoogle", "Login success via Google");
+                } else {
+                    Log.e("LoginGoogle", "Login failed: " + response.message());
+                }
+            }
+        });
     }
 
     public User loadUser(String userId){

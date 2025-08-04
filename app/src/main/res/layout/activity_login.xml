@@ -113,6 +113,7 @@
             android:layout_height="20sp"/>
 
         <FrameLayout
+            android:id="@+id/login_with_google"
             android:layout_height="80dp"
             android:layout_width="80dp"
             android:background="@drawable/background_google_login"

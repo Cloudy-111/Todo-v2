@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Todo List v2</string>
+    <string name="default_web_client_id">973816634386-evbmpp9paiui5vctjmk03569quua5mlu.apps.googleusercontent.com</string>
 </resources>

@@ -19,6 +19,9 @@ public class User {
         this.avatar = avatar;
     }
 
+    public static User createNewUserGoogle(String id, String username, String email, String avatar){
+        return new User(id, username, email, null, avatar);
+    }
     public static User createNewUser(String username, String email, String password, String avatar){
         return new User(
                 UUID.randomUUID().toString(),
