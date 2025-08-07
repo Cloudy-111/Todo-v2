@@ -24,6 +24,8 @@
             android:exported="false"/>
         <activity android:name=".activities.AddTaskActivity"
             android:exported="false"/>
+        <activity android:name=".activities.ForgotPasswordActivity"
+            android:exported="false"/>
         <activity
             android:name=".activities.LoginActivity"
             android:exported="true">

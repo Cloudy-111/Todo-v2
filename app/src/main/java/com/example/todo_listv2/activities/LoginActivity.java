@@ -29,7 +29,6 @@ import okhttp3.OkHttpClient;
 public class LoginActivity extends AppCompatActivity {
     private ActivityLoginBinding binding;
     private SharedPreferences preferences;
-    private final OkHttpClient client = new OkHttpClient();
     private AuthRepository authRepository;
     private FirebaseAuth firebaseAuth;
     private GoogleSignInClient mGoogleSignInClient;
@@ -80,6 +79,12 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         binding.loginWithGoogle.setOnClickListener(v -> signInWithGoogle());
+
+        binding.forgotPasswordButton.setOnClickListener(v -> {
+            Intent intent = new Intent(LoginActivity.this, ForgotPasswordActivity.class);
+            startActivity(intent);
+            finish();
+        });
     }
 
     private void loginUser(String email, String password){

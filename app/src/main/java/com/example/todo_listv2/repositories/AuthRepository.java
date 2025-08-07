@@ -42,6 +42,11 @@ public class AuthRepository {
         void onResult(boolean isMatch);
     }
 
+    public interface OnSendMailResetPasswordCallback{
+        void onSuccess(String messenger);
+        void onFailure(String errorMessenger);
+    }
+
     public AuthRepository(){}
 
     public AuthRepository(Context context) {
@@ -339,5 +344,56 @@ public class AuthRepository {
         } else {
             callback.onResult(false);
         }
+    }
+
+    public void resetPassword(String email, String newPassword, OnSendMailResetPasswordCallback callback){
+        JSONObject json = new JSONObject();
+        try{
+            json.put("email", email);
+            json.put("newPassword", newPassword);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        RequestBody body = RequestBody.create(json.toString(), MediaType.parse("application/json"));
+        Request request = new Request.Builder()
+                .url(baseURL + "/user/resetPassword")
+                .post(body)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Log.e("Auth_error", "Can't connect to server");
+                callback.onFailure("Can't connect to server");
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (response.isSuccessful() && response.body() != null) {
+                    try {
+                        String resStr = response.body().string();
+
+                        JSONObject resJSON = new JSONObject(resStr);
+                        boolean success = resJSON.getBoolean("success");
+                        if (success){
+                            String message = resJSON.getString("message");
+                            Log.d("Auth", message);
+                            callback.onSuccess("Send new Password Successfully");
+                        } else {
+                            Log.d("Auth", resJSON.getString("message"));
+                            callback.onFailure("Failed to send");
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Log.e("Auth_error", "Error Response: " + e.getMessage());
+                        callback.onFailure(e.getMessage());
+                    }
+                } else {
+                    Log.e("Auth_error", "Error Server: " + response.code());
+                    callback.onFailure("Error Server: " + response.code());
+                }
+            }
+        });
     }
 }

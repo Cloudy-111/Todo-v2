@@ -30,6 +30,16 @@ android {
         buildConfigField("String", "CLOUD_NAME", "\"${cloudinaryProperties["CLOUD_NAME"]}\"")
         buildConfigField("String", "API_KEY", "\"${cloudinaryProperties["API_KEY"]}\"")
         buildConfigField("String", "API_SECRET", "\"${cloudinaryProperties["API_SECRET"]}\"")
+        buildConfigField("String", "EMAIL_SEND_NEW_PASSWORD", "\"${cloudinaryProperties["EMAIL_SEND_PASSWORD"]}\"")
+        buildConfigField("String", "APP_PASSWORD", "\"${cloudinaryProperties["APP_PASSWORD"]}\"")
+    }
+
+    packaging {
+        resources {
+            excludes += "META-INF/NOTICE.md"
+             excludes += "META-INF/LICENSE.md"
+             excludes += "META-INF/DEPENDENCIES"
+        }
     }
 
     buildTypes {
@@ -85,4 +95,7 @@ dependencies {
     implementation ("androidx.credentials:credentials:1.2.2")
     implementation ("androidx.credentials:credentials-play-services-auth:1.2.2")
     implementation ("com.google.android.libraries.identity.googleid:googleid:1.1.0")
+
+    implementation("com.sun.mail:android-mail:1.6.7")
+    implementation("com.sun.mail:android-activation:1.6.7")
 }
